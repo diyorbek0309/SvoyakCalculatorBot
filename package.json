@@ -2,11 +2,21 @@
   "name": "svoyakcalculatorbot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "exports": "./index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^3.2.6",
+    "nodemon": "^2.0.18"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=14.16"
+  }
 }
