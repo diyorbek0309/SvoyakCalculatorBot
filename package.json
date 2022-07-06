@@ -2,7 +2,7 @@
   "name": "svoyakcalculatorbot",
   "version": "1.0.0",
   "description": "",
-  "exports": "./index.js",
+  "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
@@ -13,10 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "node-fetch": "^3.2.6",
+    "node-telegram-bot-api": "^0.58.0",
     "nodemon": "^2.0.18"
-  },
-  "type": "module",
-  "engines": {
-    "node": ">=14.16"
   }
 }
