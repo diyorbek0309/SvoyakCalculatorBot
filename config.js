@@ -3,4 +3,5 @@ const { env } = process;
 
 module.exports = {
     TOKEN: env.TOKEN,
+    POSTGRES: env.POSTGRES
 }
