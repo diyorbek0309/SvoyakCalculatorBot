@@ -11,6 +11,9 @@ async function postgres() {
     let db = {};
 
     db.users = await Models.UserModel(Sequelize, sequelize);
+    db.groups = await Models.GroupModel(Sequelize, sequelize);
+    db.games = await Models.GameModel(Sequelize, sequelize);
+    db.gamers = await Models.GamerModel(Sequelize, sequelize);
 
     await sequelize.sync({ force: false });
 
