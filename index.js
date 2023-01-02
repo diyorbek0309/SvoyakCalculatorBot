@@ -27,12 +27,9 @@ async function main() {
     Controllers.GameController(message.chat, message.from, "end", bot, psql);
   });
 
-  await bot.onText(/^[1-9][0-9]?$/, (message) => {
+  await bot.onText(/^[-+]?\d+?$/, (message) => {;
     if (message.reply_to_message) {
-      if (
-        parseInt(message.text) > 99999999 ||
-        parseInt(message.text) < -999999999
-      ) {
+      if (parseInt(message.text) > 1001 || parseInt(message.text) < -1001) {
         bot.sendMessage(message.chat.id, `Noto'g'ri ball berdingiz!`);
       } else {
         Controllers.GamerController(message, bot, psql);

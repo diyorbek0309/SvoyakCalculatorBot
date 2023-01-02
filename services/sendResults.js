@@ -1,41 +1,41 @@
 module.exports = async function sendResults(bot, game, allGamers) {
   await bot.sendMessage(
     game.group_id,
-    `Umumiy natijalar: \n \n1. @${
+    `📋 Tablo 📋 \n \n🥇 @${
       allGamers[0].user_name || allGamers[0].first_name
     }: ${allGamers[0].score} ball` +
       `\n` +
       `${
         allGamers[1]
-          ? `2. @${allGamers[1].user_name || allGamers[1].first_name}: ${
+          ? `🥈 @${allGamers[1].user_name || allGamers[1].first_name}: ${
               allGamers[1].score
             } ball` + `\n`
           : ""
       }` +
       `${
         allGamers[2]
-          ? `3. @${allGamers[2].user_name || allGamers[2].first_name}: ${
+          ? `🥉 @${allGamers[2].user_name || allGamers[2].first_name}: ${
               allGamers[2].score
             } ball` + `\n`
           : ""
       }` +
       `${
         allGamers[3]
-          ? `4. @${allGamers[3].user_name || allGamers[3].first_name}: ${
+          ? `4️⃣ @${allGamers[3].user_name || allGamers[3].first_name}: ${
               allGamers[3].score
             } ball` + `\n`
           : ""
       }` +
       `${
         allGamers[4]
-          ? `5. @${allGamers[4].user_name || allGamers[4].first_name}: ${
+          ? `5️⃣ @${allGamers[4].user_name || allGamers[4].first_name}: ${
               allGamers[4].score
             } ball` + `\n`
           : ""
       }` +
       `${
         allGamers[5]
-          ? `6. @${allGamers[5].user_name || allGamers[5].first_name}: ${
+          ? `6️⃣ @${allGamers[5].user_name || allGamers[5].first_name}: ${
               allGamers[5].score
             } ball` + `\n`
           : ""
