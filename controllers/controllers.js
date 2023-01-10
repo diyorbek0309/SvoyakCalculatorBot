@@ -141,7 +141,17 @@ module.exports = class Controllers {
         sendResults(bot, game, allGamers);
       }
     } else {
-      await bot.sendMessage(game.group_id, `Hali o'yin boshlanmagan!`);
+      if (game.group_id)
+        await bot.sendMessage(game.group_id, `Hali o'yin boshlanmagan!`);
     }
+  }
+
+  static async Aytibar(message, bot) {
+    const group_id = parseInt(message.chat.id);
+
+    await bot.sendMessage(
+      group_id,
+      `Bot uchun 10mingdan tashabaringla! 9860190104312326 😂🤣`
+    );
   }
 };

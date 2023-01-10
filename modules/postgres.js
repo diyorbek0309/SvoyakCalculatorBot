@@ -19,7 +19,7 @@ async function postgres() {
 
     return db;
   } catch (error) {
-    console.error("Unable to connect to the database:", error);
+    console.error("Unable to connect to the database: ", error);
   }
 }
 

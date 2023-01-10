@@ -9,15 +9,14 @@ async function main() {
   const psql = await postgres();
 
   // await bot.on("message", (message) => {
-  //   Controllers.MessageController(message, bot, psql);
+  //   console.log(bot);
   // });
 
-  await bot.on("new_chat_members", (message) => {
-    console.log(message);
-    if (message.chat.id) {
-      Controllers.GroupController(message.chat, bot, psql);
-    }
-  });
+  // await bot.on("new_chat_members", (message) => {
+  //   if (message.chat.id) {
+  //     Controllers.GroupController(message.chat, bot, psql);
+  //   }
+  // });
 
   await bot.onText(/\/startSvoyak/, (message) => {
     Controllers.GameController(message.chat, message.from, "start", bot, psql);
@@ -27,7 +26,7 @@ async function main() {
     Controllers.GameController(message.chat, message.from, "end", bot, psql);
   });
 
-  await bot.onText(/^[-+]?\d+?$/, (message) => {;
+  await bot.onText(/^[-+]?\d+?$/, (message) => {
     if (message.reply_to_message) {
       if (parseInt(message.text) > 1001 || parseInt(message.text) < -1001) {
         bot.sendMessage(message.chat.id, `Noto'g'ri ball berdingiz!`);
@@ -40,6 +39,9 @@ async function main() {
         "Ochkoni xabarga javob tarzida jo'natishingiz kerak!"
       );
     }
+  });
+  await bot.onText(/\/aytibar/, (message) => {
+    Controllers.Aytibar(message, bot);
   });
 }
 
