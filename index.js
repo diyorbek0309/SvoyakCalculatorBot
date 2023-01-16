@@ -40,8 +40,13 @@ async function main() {
       );
     }
   });
+
   await bot.onText(/\/aytibar/, (message) => {
     Controllers.Aytibar(message, bot);
+  });
+
+  await bot.onText(/\/clearDB/, () => {
+    Controllers.ClearDB(psql);
   });
 }
 

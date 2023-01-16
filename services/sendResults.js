@@ -102,6 +102,76 @@ module.exports = async function sendResults(bot, game, allGamers) {
               allGamers[14].score
             } ball` + `\n`
           : ""
+      }` +
+      `${
+        allGamers[15]
+          ? `16. @${allGamers[15].user_name || allGamers[15].first_name}: ${
+              allGamers[15].score
+            } ball` + `\n`
+          : ""
+      }` +
+      `${
+        allGamers[16]
+          ? `17. @${allGamers[16].user_name || allGamers[16].first_name}: ${
+              allGamers[14].score
+            } ball` + `\n`
+          : ""
+      }` +
+      `${
+        allGamers[17]
+          ? `18. @${allGamers[17].user_name || allGamers[17].first_name}: ${
+              allGamers[17].score
+            } ball` + `\n`
+          : ""
+      }` +
+      `${
+        allGamers[18]
+          ? `19. @${allGamers[18].user_name || allGamers[18].first_name}: ${
+              allGamers[18].score
+            } ball` + `\n`
+          : ""
+      }` +
+      `${
+        allGamers[19]
+          ? `20. @${allGamers[19].user_name || allGamers[19].first_name}: ${
+              allGamers[19].score
+            } ball` + `\n`
+          : ""
+      }` +
+      `${
+        allGamers[20]
+          ? `21. @${allGamers[20].user_name || allGamers[20].first_name}: ${
+              allGamers[20].score
+            } ball` + `\n`
+          : ""
+      }` +
+      `${
+        allGamers[21]
+          ? `22. @${allGamers[21].user_name || allGamers[21].first_name}: ${
+              allGamers[21].score
+            } ball` + `\n`
+          : ""
+      }` +
+      `${
+        allGamers[22]
+          ? `23. @${allGamers[22].user_name || allGamers[22].first_name}: ${
+              allGamers[22].score
+            } ball` + `\n`
+          : ""
+      }` +
+      `${
+        allGamers[23]
+          ? `24. @${allGamers[23].user_name || allGamers[23].first_name}: ${
+              allGamers[23].score
+            } ball` + `\n`
+          : ""
+      }` +
+      `${
+        allGamers[24]
+          ? `25. @${allGamers[24].user_name || allGamers[24].first_name}: ${
+              allGamers[24].score
+            } ball` + `\n`
+          : ""
       }`
   );
 };

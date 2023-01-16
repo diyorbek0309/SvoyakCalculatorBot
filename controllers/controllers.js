@@ -126,7 +126,11 @@ module.exports = class Controllers {
         });
 
         allGamers.sort((a, b) => b.score - a.score);
-        sendResults(bot, game, allGamers);
+        if (allGamers.length > 25) {
+          bot.sendMessage(id, `Tabloda ko'pi bilan 25 o'yinchi ko'rsatiladi!`);
+        } else {
+          sendResults(bot, game, allGamers);
+        }
       } else {
         gamer.score = parseInt(gamer.score) + parseInt(message.text);
         await gamer.save();
@@ -153,5 +157,13 @@ module.exports = class Controllers {
       group_id,
       `Bot uchun 10mingdan tashabaringla! 9860190104312326 😂🤣`
     );
+  }
+
+  static async ClearDB(psql) {
+    await psql.games.destroy({
+      where: {
+        status: "finished",
+      },
+    });
   }
 };
