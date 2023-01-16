@@ -33,11 +33,6 @@ async function main() {
       } else {
         Controllers.GamerController(message, bot, psql);
       }
-    } else {
-      bot.sendMessage(
-        message.chat.id,
-        "Ochkoni xabarga javob tarzida jo'natishingiz kerak!"
-      );
     }
   });
 
