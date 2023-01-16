@@ -16,9 +16,9 @@ module.exports = class Controllers {
         chat_id,
       });
 
-      bot.sendMessage(chat_id, `Siz botda yangisiz!`);
+      await bot.sendMessage(chat_id, `Siz botda yangisiz!`);
     } else {
-      bot.sendMessage(chat_id, `Siz botda ro'yxatdan o'tgansiz!`);
+      await bot.sendMessage(chat_id, `Siz botda ro'yxatdan o'tgansiz!`);
     }
   }
 
@@ -37,12 +37,12 @@ module.exports = class Controllers {
         title,
       });
 
-      bot.sendMessage(
+      await bot.sendMessage(
         id,
         `SvoyakCalculatorBotni guruhingizga qo'shganingiz uchun raxmat!`
       );
     } else {
-      bot.sendMessage(
+      await bot.sendMessage(
         id,
         `SvoyakCalculatorBotni guruhingizga qaytarganingiz uchun raxmat!`
       );
@@ -50,7 +50,7 @@ module.exports = class Controllers {
   }
 
   static async GameController(group, creator, type, bot, psql) {
-    const { id, title } = group;
+    const { id } = group;
     const game = await psql.games.findOne({
       where: {
         group_id: id,
@@ -63,37 +63,37 @@ module.exports = class Controllers {
         await psql.games.create({
           group_id: id,
           creator_id: creator.id,
-          creator_user_name: creator.username,
+          creator_user_name: creator.username || creator.first_name,
           status: "started",
         });
 
-        bot.sendMessage(id, `SvoyakCalculatorBot o'z ishini boshladi!`);
+        await bot.sendMessage(id, `SvoyakCalculatorBot o'z ishini boshladi!`);
       } else {
-        bot.sendMessage(
+        await bot.sendMessage(
           id,
           `Guruhda o'yin bo'layapti, yangisini boshlash uchun hozirgi o'yinni tugatishingiz kerak!`
         );
       }
     } else if (type === "end" && game) {
-      // if (game.creator_id === creator.id) {
-      game.status = "finished";
-      await game.save();
+      if (+game.creator_id === creator.id) {
+        game.status = "finished";
+        await game.save();
 
-      bot.sendMessage(id, `SvoyakCalculatorBot o'z ishini tugatdi!`);
-      // }
-      //  else {
-      //   bot.sendMessage(
-      //     id,
-      //     `Ushbu o'yinni faqat @${creator.username} yakunlay oladi!`
-      //   );
-      // }
+        await bot.sendMessage(id, `SvoyakCalculatorBot o'z ishini tugatdi!`);
+      } else {
+        await bot.sendMessage(
+          id,
+          `Ushbu o'yinni faqat @${game.creator_user_name} yakunlay oladi!`
+        );
+      }
     } else {
-      bot.sendMessage(id, `Faol o'yin yo'q!`);
+      await bot.sendMessage(id, `Faol o'yin yo'q!`);
     }
   }
 
   static async GamerController(message, bot, psql) {
     const { id, username, first_name } = message.reply_to_message.from;
+    const creator_id = message.from.id;
 
     const group_id = parseInt(message.chat.id);
     const game = await psql.games.findOne({
@@ -104,45 +104,45 @@ module.exports = class Controllers {
     });
 
     if (game) {
-      const gamer = await psql.gamers.findOne({
-        where: {
-          game_id: game.id,
-          user_id: id,
-        },
-      });
-
-      if (!gamer) {
-        await psql.gamers.create({
-          game_id: game.id,
-          user_id: id,
-          user_name: username || first_name,
-          score: parseInt(message.text),
-        });
-
-        const allGamers = await psql.gamers.findAll({
+      if (+game.creator_id === creator_id) {
+        const gamer = await psql.gamers.findOne({
           where: {
             game_id: game.id,
+            user_id: id,
           },
         });
-
-        allGamers.sort((a, b) => b.score - a.score);
-        if (allGamers.length > 25) {
-          bot.sendMessage(id, `Tabloda ko'pi bilan 25 o'yinchi ko'rsatiladi!`);
+        if (!gamer) {
+          await psql.gamers.create({
+            game_id: game.id,
+            user_id: id,
+            user_name: username || first_name,
+            score: parseInt(message.text),
+          });
+          const allGamers = await psql.gamers.findAll({
+            where: {
+              game_id: game.id,
+            },
+          });
+          allGamers.sort((a, b) => b.score - a.score);
+          if (allGamers.length > 25) {
+            bot.sendMessage(
+              id,
+              `Tabloda ko'pi bilan 25 o'yinchi ko'rsatiladi!`
+            );
+          } else {
+            sendResults(bot, game, allGamers);
+          }
         } else {
+          gamer.score = parseInt(gamer.score) + parseInt(message.text);
+          await gamer.save();
+          const allGamers = await psql.gamers.findAll({
+            where: {
+              game_id: game.id,
+            },
+          });
+          allGamers.sort((a, b) => b.score - a.score);
           sendResults(bot, game, allGamers);
         }
-      } else {
-        gamer.score = parseInt(gamer.score) + parseInt(message.text);
-        await gamer.save();
-
-        const allGamers = await psql.gamers.findAll({
-          where: {
-            game_id: game.id,
-          },
-        });
-
-        allGamers.sort((a, b) => b.score - a.score);
-        sendResults(bot, game, allGamers);
       }
     } else {
       if (game.group_id)
