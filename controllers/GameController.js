@@ -26,11 +26,11 @@ module.exports = async function GameController(
           status: "started",
         });
 
-        await bot.sendMessage(id, `SvoyakCalculatorBot o'z ishini boshladi!`);
+        await bot.sendMessage(id, `SvoyakCalculatorBot oʻz ishini boshladi!`);
       } else {
         await bot.sendMessage(
           id,
-          `Guruhda o'yin bo'layapti, yangisini boshlash uchun hozirgi o'yinni tugatishingiz kerak!`
+          `Guruhda oʻyin boʻlayapti, yangisini boshlash uchun hozirgi oʻyinni tugatishingiz kerak!`
         );
       }
     } else if (type === "end" && game) {
@@ -44,25 +44,25 @@ module.exports = async function GameController(
         await game.save();
 
         finishedResults(bot, game, allGamers);
-        await bot.sendMessage(id, `SvoyakCalculatorBot o'z ishini tugatdi!`);
         await bot.sendMessage(
           id,
-          `Boshlovchi @${game.creator_user_name}ga nichik tashakkur bildirsak akan @Xalmenova_Tamara ?)))`
+          `Boshlovchi @${game.creator_user_name} ga alohida tashakkur aytamiz! `
         );
+        await bot.sendMessage(id, `SvoyakCalculatorBot oʻz ishini tugatdi!`);
       } else {
         await bot.sendMessage(
           id,
-          `Ushbu o'yinni faqat @${game.creator_user_name} yakunlay oladi!`
+          `Ushbu oʻyinni faqat @${game.creator_user_name} yakunlay oladi!`
         );
       }
     } else {
-      await bot.sendMessage(id, `Faol o'yin yo'q!`);
+      await bot.sendMessage(id, `Faol oʻyin yoʻq!`);
     }
   } catch (error) {
     console.log(error);
     await bot.sendMessage(
       id,
-      `Qandaydir xatolik sodir bo'ldi. Iltimos, o'yinni qayta boshlang!`
+      `Qandaydir xatolik sodir boʻldi. Iltimos, oʻyinni qayta boshlang!`
     );
   }
 };

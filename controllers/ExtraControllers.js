@@ -15,7 +15,7 @@ module.exports = class ExtraControllers {
 
         await bot.sendMessage(chat_id, `Siz botda yangisiz!`);
       } else {
-        await bot.sendMessage(chat_id, `Siz botda ro'yxatdan oʻtgansiz!`);
+        await bot.sendMessage(chat_id, `Siz botda roʻyxatdan oʻtgansiz!`);
       }
     } catch (error) {
       console.log(error);

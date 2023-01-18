@@ -172,6 +172,41 @@ module.exports = async function sendResults(bot, game, allGamers) {
               allGamers[24].score
             } ball` + `\n`
           : ""
+      }` +
+      `${
+        allGamers[25]
+          ? `26. @${allGamers[25].user_name || allGamers[25].first_name}: ${
+              allGamers[25].score
+            } ball` + `\n`
+          : ""
+      }` +
+      `${
+        allGamers[26]
+          ? `27. @${allGamers[26].user_name || allGamers[26].first_name}: ${
+              allGamers[26].score
+            } ball` + `\n`
+          : ""
+      }` +
+      `${
+        allGamers[27]
+          ? `28. @${allGamers[27].user_name || allGamers[27].first_name}: ${
+              allGamers[27].score
+            } ball` + `\n`
+          : ""
+      }` +
+      `${
+        allGamers[28]
+          ? `29. @${allGamers[28].user_name || allGamers[28].first_name}: ${
+              allGamers[28].score
+            } ball` + `\n`
+          : ""
+      }` +
+      `${
+        allGamers[29]
+          ? `30. @${allGamers[29].user_name || allGamers[29].first_name}: ${
+              allGamers[29].score
+            } ball` + `\n`
+          : ""
       }`
   );
 };

@@ -26,6 +26,6 @@ module.exports = async function GroupController(group, bot, psql) {
     }
   } catch (error) {
     console.log(error);
-    await bot.sendMessage(id, `Qandaydir xatolik sodir bo'ldi!`);
+    await bot.sendMessage(id, `Qandaydir xatolik sodir boʻldi!`);
   }
 };
