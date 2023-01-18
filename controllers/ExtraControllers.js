@@ -23,6 +23,46 @@ module.exports = class ExtraControllers {
     }
   }
 
+  static async ChangeCreator(message, bot, psql) {
+    const { id, username, first_name } = message.reply_to_message.from;
+    const old_creator_id = message.from.id;
+    const old_username = message.from.username || message.from.first_name;
+    const group_id = parseInt(message.chat.id);
+    const game = await psql.games.findOne({
+      where: {
+        group_id,
+        status: "started",
+      },
+    });
+
+    try {
+      if (game) {
+        if (+game.creator_id === old_creator_id) {
+          game.creator_id = id;
+          game.creator_user_name = username || first_name;
+          await game.save();
+          await bot.sendMessage(
+            group_id,
+            `Boshlovchi muvaffaqiyatli oʻzgartirildi. Endi @${game.creator_user_name} boshlovchi!`
+          );
+        } else {
+          await bot.sendMessage(
+            group_id,
+            `@${old_username} siz boshlovchi emassiz!`
+          );
+        }
+      } else {
+        if (group_id) await bot.sendMessage(group_id, `Faol oʻyin yoʻq!`);
+      }
+    } catch (error) {
+      console.log(error);
+      await bot.sendMessage(
+        group_id,
+        `Qandaydir xatolik sodir boʻldi. Iltimos, oʻyinni qayta boshlang!`
+      );
+    }
+  }
+
   static async Aytibar(message, bot) {
     const group_id = parseInt(message.chat.id);
 

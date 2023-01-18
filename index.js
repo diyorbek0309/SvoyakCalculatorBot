@@ -28,6 +28,12 @@ async function main() {
     }
   });
 
+  await bot.onText(/\/changeCreator/, (message) => {
+    if (message.reply_to_message) {
+      ExtraControllers.ChangeCreator(message, bot, psql);
+    }
+  });
+
   await bot.onText(/\/aytibar/, (message) => {
     ExtraControllers.Aytibar(message, bot);
   });

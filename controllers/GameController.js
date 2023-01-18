@@ -43,11 +43,13 @@ module.exports = async function GameController(
         game.status = "finished";
         await game.save();
 
-        finishedResults(bot, game, allGamers);
-        await bot.sendMessage(
-          id,
-          `Boshlovchi @${game.creator_user_name} ga alohida tashakkur aytamiz! `
-        );
+        if (allGamers.length) {
+          finishedResults(bot, game, allGamers);
+          await bot.sendMessage(
+            id,
+            `Boshlovchi @${game.creator_user_name} ga alohida tashakkur aytamiz! `
+          );
+        }
         await bot.sendMessage(id, `SvoyakCalculatorBot oʻz ishini tugatdi!`);
       } else {
         await bot.sendMessage(

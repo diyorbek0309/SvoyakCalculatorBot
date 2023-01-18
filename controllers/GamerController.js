@@ -53,14 +53,11 @@ module.exports = async function GamerController(message, bot, psql) {
           sendResults(bot, game, allGamers);
         }
       }
-    } else {
-      if (game.group_id)
-        await bot.sendMessage(game.group_id, `Hali oʻyin boshlanmagan!`);
     }
   } catch (error) {
     console.log(error);
     await bot.sendMessage(
-      game.group_id,
+      group_id,
       `Qandaydir xatolik sodir boʻldi. Iltimos, oʻyinni qayta boshlang!`
     );
   }
