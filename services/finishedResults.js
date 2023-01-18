@@ -11,7 +11,7 @@ module.exports = async function finishedResults(bot, game, allGamers) {
       `\n` +
       `${
         allGamers[1]
-          ? `🥈 @${
+          ? `🥈 ${
               allGamers[1].user_name
                 ? "@" + allGamers[1].user_name
                 : allGamers[1].first_name
@@ -20,7 +20,7 @@ module.exports = async function finishedResults(bot, game, allGamers) {
       }` +
       `${
         allGamers[2]
-          ? `🥉 @${
+          ? `🥉 ${
               allGamers[2].user_name
                 ? "@" + allGamers[2].user_name
                 : allGamers[2].first_name
