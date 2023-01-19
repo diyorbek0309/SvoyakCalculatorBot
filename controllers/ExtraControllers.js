@@ -51,7 +51,7 @@ module.exports = class ExtraControllers {
         } else {
           await bot.sendMessage(
             group_id,
-            `@${
+            `${
               old_username ? "@" + old_username : old_first_name
             } siz boshlovchi emassiz!`
           );
