@@ -22,7 +22,9 @@ module.exports = async function GameController(
         await psql.games.create({
           group_id: id,
           creator_id: creator.id,
-          creator_user_name: creator.username || creator.first_name,
+          creator_user_name: creator.username
+            ? `@${creator.username}`
+            : creator.first_name,
           status: "started",
         });
 
@@ -47,14 +49,14 @@ module.exports = async function GameController(
           finishedResults(bot, game, allGamers);
           await bot.sendMessage(
             id,
-            `Boshlovchi @${game.creator_user_name} ga alohida tashakkur aytamiz! `
+            `Boshlovchi ${game.creator_user_name}'ga alohida tashakkur aytamiz! `
           );
         }
         await bot.sendMessage(id, `SvoyakCalculatorBot oʻz ishini tugatdi!`);
       } else {
         await bot.sendMessage(
           id,
-          `Ushbu oʻyinni faqat @${game.creator_user_name} yakunlay oladi!`
+          `Ushbu oʻyinni faqat ${game.creator_user_name} yakunlay oladi!`
         );
       }
     } else {

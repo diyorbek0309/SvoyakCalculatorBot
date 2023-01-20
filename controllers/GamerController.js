@@ -24,7 +24,7 @@ module.exports = async function GamerController(message, bot, psql) {
           await psql.gamers.create({
             game_id: game.id,
             user_id: id,
-            user_name: username || first_name,
+            user_name: username ? `@${username}` : first_name,
             score: parseInt(message.text),
           });
           const allGamers = await psql.gamers.findAll({
