@@ -90,7 +90,7 @@ module.exports = class ExtraControllers {
           adminIds.includes(old_creator_id)
         ) {
           game.creator_id = id;
-          game.creator_user_name = username || first_name;
+          game.creator_user_name = username ? "@" + username : first_name;
           await game.save();
           await bot.sendMessage(
             group_id,
