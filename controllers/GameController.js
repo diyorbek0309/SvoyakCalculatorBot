@@ -18,8 +18,7 @@ module.exports = async function GameController(
     });
 
     const admins = await bot.getChatAdministrators(id);
-    const adminIds = [];
-    admins.forEach((element) => adminIds.push(element.user.id));
+    const adminIds = admins.map((admin) => admin.user.id);
 
     if (type === "start") {
       if (!game) {

@@ -1,9 +1,15 @@
 const sendResults = require("../services/sendResults");
 
 module.exports = async function GamerController(message, bot, psql) {
-  const { id, username, first_name } = message.reply_to_message.from;
-  const creator_id = message.from.id;
-  const group_id = parseInt(message.chat.id);
+  const {
+    reply_to_message: {
+      from: { id, username, first_name },
+    },
+    from: { id: creator_id },
+  } = message;
+
+  const group_id = Number(message.chat.id);
+
   const game = await psql.games.findOne({
     where: {
       group_id,

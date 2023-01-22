@@ -61,14 +61,20 @@ module.exports = class ExtraControllers {
   }
 
   static async ChangeCreator(message, bot, psql) {
-    const { id, username, first_name } = message.reply_to_message.from;
-    const old_creator_id = message.from.id;
-    const old_username = message.from.username;
-    const old_first_name = message.from.first_name;
+    const {
+      reply_to_message: {
+        from: { id, username, first_name },
+      },
+      from: {
+        id: old_creator_id,
+        username: old_username,
+        first_name: old_first_name,
+      },
+    } = message;
+
     const group_id = parseInt(message.chat.id);
     const admins = await bot.getChatAdministrators(group_id);
-    const adminIds = [];
-    admins.forEach((element) => adminIds.push(element.user.id));
+    const adminIds = admins.map((admin) => admin.user.id);
 
     const game = await psql.games.findOne({
       where: {
