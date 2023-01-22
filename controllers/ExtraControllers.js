@@ -123,7 +123,7 @@ module.exports = class ExtraControllers {
 
     await bot.sendMessage(
       group_id,
-      `Bot uchun 10mingdan tashabaringla! 9860190104312326 😂🤣`
+      `Bot uchun 10mingdan tashabaringla! 😂🤣`
     );
   }
 
