@@ -38,6 +38,10 @@ async function main() {
     ExtraControllers.Aytibar(message, bot);
   });
 
+  await bot.onText(/\/getStats/, (message) => {
+    ExtraControllers.StatsController(message, bot, psql);
+  });
+
   await bot.onText(/\/clearDB/, () => {
     ExtraControllers.ClearDB(psql);
   });

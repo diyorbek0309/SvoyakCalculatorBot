@@ -23,12 +23,53 @@ module.exports = class ExtraControllers {
     }
   }
 
+  static async StatsController(message, bot, psql) {
+    const group_id = message.chat.id;
+    const games = await psql.games.findAll();
+    const botId = 5536335495;
+    let groupIDs = [];
+    games.forEach((game) => groupIDs.push(game.group_id));
+    groupIDs = [...new Set(groupIDs)];
+
+    // try {
+    // bot.getChatMember(groupIDs[8], botId).then((chatMember) => {
+    //   if (chatMember.status === "member") {
+    //     console.log("Bot is a member of the group", groupIDs[8]);
+    //   } else {
+    //     console.log("Bot is not a member of the group", groupIDs[8]);
+    //   }
+    // });
+    // groupIDs.forEach(async (groupID) => {
+    //   bot.getChatMember(groupID, botId).then((chatMember) => {
+    //     if (chatMember.status === "member") {
+    //       console.log("Bot is a member of the group", groupID);
+    //     } else {
+    //       console.log("Bot is not a member of the group", groupID);
+    //     }
+    //   });
+
+    //   // const group = await bot.getChat(groupID);
+    //   // console.log(group);
+    //   // const count = await bot.getChatMembersCount(groupID);
+    //   // const message = `Group Title: ${group.title}\nUser's count: ${count}`;
+    //   // console.log(message);
+    //   // await bot.sendMessage(group_id, message);
+    // });
+    // } catch (error) {
+    //   console.log(error.message);
+    // }
+  }
+
   static async ChangeCreator(message, bot, psql) {
     const { id, username, first_name } = message.reply_to_message.from;
     const old_creator_id = message.from.id;
     const old_username = message.from.username;
     const old_first_name = message.from.first_name;
     const group_id = parseInt(message.chat.id);
+    const admins = await bot.getChatAdministrators(group_id);
+    const adminIds = [];
+    admins.forEach((element) => adminIds.push(element.user.id));
+
     const game = await psql.games.findOne({
       where: {
         group_id,
@@ -38,7 +79,10 @@ module.exports = class ExtraControllers {
 
     try {
       if (game) {
-        if (+game.creator_id === old_creator_id) {
+        if (
+          +game.creator_id === old_creator_id ||
+          adminIds.includes(old_creator_id)
+        ) {
           game.creator_id = id;
           game.creator_user_name = username || first_name;
           await game.save();
@@ -53,7 +97,7 @@ module.exports = class ExtraControllers {
             group_id,
             `${
               old_username ? "@" + old_username : old_first_name
-            } siz boshlovchi emassiz!`
+            } siz boshlovchi yoki admin emassiz!`
           );
         }
       } else {

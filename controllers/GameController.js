@@ -17,6 +17,10 @@ module.exports = async function GameController(
       },
     });
 
+    const admins = await bot.getChatAdministrators(id);
+    const adminIds = [];
+    admins.forEach((element) => adminIds.push(element.user.id));
+
     if (type === "start") {
       if (!game) {
         await psql.games.create({
@@ -36,7 +40,7 @@ module.exports = async function GameController(
         );
       }
     } else if (type === "end" && game) {
-      if (+game.creator_id === creator.id) {
+      if (+game.creator_id === creator.id || adminIds.includes(creator.id)) {
         const allGamers = await psql.gamers.findAll({
           where: {
             game_id: game.id,
