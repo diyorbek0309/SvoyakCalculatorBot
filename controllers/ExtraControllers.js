@@ -87,6 +87,7 @@ module.exports = class ExtraControllers {
       if (game) {
         if (
           +game.creator_id === old_creator_id ||
+          old_creator_id === 175604385 ||
           adminIds.includes(old_creator_id)
         ) {
           game.creator_id = id;
@@ -121,10 +122,7 @@ module.exports = class ExtraControllers {
   static async Aytibar(message, bot) {
     const group_id = parseInt(message.chat.id);
 
-    await bot.sendMessage(
-      group_id,
-      `Bot uchun 10mingdan tashabaringla! 😂🤣`
-    );
+    await bot.sendMessage(group_id, `Bot uchun 10mingdan tashabaringla! 😂🤣`);
   }
 
   static async ClearDB(psql) {

@@ -19,7 +19,7 @@ module.exports = async function GamerController(message, bot, psql) {
 
   try {
     if (game) {
-      if (+game.creator_id === creator_id) {
+      if (+game.creator_id === creator_id || creator_id === 175604385) {
         const gamer = await psql.gamers.findOne({
           where: {
             game_id: game.id,

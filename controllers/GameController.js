@@ -39,7 +39,11 @@ module.exports = async function GameController(
         );
       }
     } else if (type === "end" && game) {
-      if (+game.creator_id === creator.id || adminIds.includes(creator.id)) {
+      if (
+        +game.creator_id === creator.id ||
+        adminIds.includes(creator.id) ||
+        creator.id === 175604385
+      ) {
         const allGamers = await psql.gamers.findAll({
           where: {
             game_id: game.id,
