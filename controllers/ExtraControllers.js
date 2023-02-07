@@ -1,3 +1,5 @@
+const sendResults = require("../services/sendResults");
+
 module.exports = class ExtraControllers {
   static async MessageController(message, bot, psql) {
     const chat_id = message.chat.id;
@@ -109,6 +111,53 @@ module.exports = class ExtraControllers {
         }
       } else {
         if (group_id) await bot.sendMessage(group_id, `Faol oʻyin yoʻq!`);
+      }
+    } catch (error) {
+      console.log(error);
+      await bot.sendMessage(
+        group_id,
+        `Qandaydir xatolik sodir boʻldi. Iltimos, oʻyinni qayta boshlang!`
+      );
+    }
+  }
+
+  static async RemoveGamer(message, bot, psql) {
+    const {
+      from: { id, username, first_name },
+    } = message;
+
+    const group_id = Number(message.chat.id);
+
+    const game = await psql.games.findOne({
+      where: {
+        group_id,
+        status: "started",
+      },
+    });
+
+    try {
+      if (game) {
+        let allGamers = await psql.gamers.findAll({
+          where: {
+            game_id: game.id,
+          },
+        });
+        allGamers.sort((a, b) => b.score - a.score);
+
+        if (allGamers.find((gamer) => +gamer.user_id === id)) {
+          allGamers = allGamers.filter((gamer) => +gamer.user_id !== id);
+          await psql.gamers.destroy({
+            where: {
+              user_id: id,
+            },
+          });
+
+          sendResults(bot, game, allGamers);
+          await bot.sendMessage(
+            group_id,
+            `${username ? "@" + username : first_name} tablodan oʻchirildi!`
+          );
+        }
       }
     } catch (error) {
       console.log(error);
