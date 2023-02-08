@@ -10,7 +10,7 @@ const bot = new TelegramBot(TOKEN, { polling: true });
 async function main() {
   const psql = await postgres();
 
-  await bot.onText(/\/start/, (message) => {
+  await bot.onText(/^\/start$/, (message) => {
     bot.sendMessage(
       message.chat.id,
       `Botdan foydalanish uchun guruhga administrator sifatida qoʻshishingiz kerak!`
