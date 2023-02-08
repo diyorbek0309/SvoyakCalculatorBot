@@ -174,11 +174,15 @@ module.exports = class ExtraControllers {
     await bot.sendMessage(group_id, `Bot uchun 10mingdan tashabaringla! 😂🤣`);
   }
 
-  static async ClearDB(psql) {
-    await psql.games.destroy({
-      where: {
-        status: "finished",
-      },
-    });
+  static async ClearDB(message, bot, psql) {
+    const group_id = Number(message.chat.id);
+    try {
+      await psql.games.destroy({
+        where: {
+          status: "finished",
+        },
+      });
+      await bot.sendMessage(group_id, `Done ✅`);
+    } catch (error) {}
   }
 };

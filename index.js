@@ -10,6 +10,13 @@ const bot = new TelegramBot(TOKEN, { polling: true });
 async function main() {
   const psql = await postgres();
 
+  await bot.onText(/\/start/, (message) => {
+    bot.sendMessage(
+      message.chat.id,
+      `Botdan foydalanish uchun guruhga administrator sifatida qoʻshishingiz kerak!`
+    );
+  });
+
   await bot.onText(/\/startSvoyak/, (message) => {
     GameController(message.chat, message.from, "start", bot, psql);
   });
@@ -46,8 +53,8 @@ async function main() {
     ExtraControllers.StatsController(message, bot, psql);
   });
 
-  await bot.onText(/\/clearDB/, () => {
-    ExtraControllers.ClearDB(psql);
+  await bot.onText(/\/clearDB/, (message) => {
+    ExtraControllers.ClearDB(message, bot, psql);
   });
 
   await bot.onText(/\/help/, (message) => {
