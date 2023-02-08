@@ -27,11 +27,7 @@ async function main() {
 
   await bot.onText(/^[-+]?\d+?$/, (message) => {
     if (message.reply_to_message) {
-      if (parseInt(message.text) > 1001 || parseInt(message.text) < -1001) {
-        bot.sendMessage(message.chat.id, `Notoʻgʻri ball berdingiz!`);
-      } else {
-        GamerController(message, bot, psql);
-      }
+      GamerController(message, bot, psql);
     }
   });
 
@@ -43,10 +39,6 @@ async function main() {
     if (message.reply_to_message) {
       ExtraControllers.ChangeCreator(message, bot, psql);
     }
-  });
-
-  await bot.onText(/\/aytibar/, (message) => {
-    ExtraControllers.Aytibar(message, bot);
   });
 
   await bot.onText(/\/getStats/, (message) => {
@@ -70,6 +62,10 @@ async function main() {
       `Shaxsiy oʻyin jarayonida ochkolarni hisoblab boruvchi bot.\nDasturchi: @dasturchining_tundaligi`
     );
   });
+
+  // await bot.onText(/\/aytibar/, (message) => {
+  //   ExtraControllers.Aytibar(message, bot);
+  // });
 }
 
 main();

@@ -182,7 +182,12 @@ module.exports = class ExtraControllers {
           status: "finished",
         },
       });
-      await bot.sendMessage(group_id, `Done ✅`);
-    } catch (error) {}
+      await bot.sendMessage(group_id, `Bajarildi apka ✅`);
+    } catch (error) {
+      await bot.sendMessage(
+        group_id,
+        `Qandaydir xatolik sodir boʻldi. Iltimos, oʻyinni qayta boshlang!`
+      );
+    }
   }
 };
