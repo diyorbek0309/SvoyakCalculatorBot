@@ -56,7 +56,7 @@ module.exports = async function GameController(
           finishedResults(bot, game, allGamers);
           await bot.sendMessage(
             id,
-            `Boshlovchi ${game.creator_user_name}'ga alohida tashakkur aytamiz! `
+            `Boshlovchi ${game.creator_user_name}'ga alohida tashakkur aytamiz!\nDasturchi: @dasturchining_tundaligi`
           );
         }
         await bot.sendMessage(id, `SvoyakCalculatorBot oʻz ishini tugatdi!`);
