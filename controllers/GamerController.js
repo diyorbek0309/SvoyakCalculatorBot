@@ -7,6 +7,7 @@ module.exports = async function GamerController(message, bot, psql) {
     },
     from: { id: creator_id },
   } = message;
+  const channelId = 1982661533;
 
   const group_id = Number(message.chat.id);
 
@@ -52,15 +53,28 @@ module.exports = async function GamerController(message, bot, psql) {
             sendResults(bot, game, allGamers);
           }
         } else {
-          gamer.score = parseInt(gamer.score) + parseInt(message.text);
-          await gamer.save();
-          const allGamers = await psql.gamers.findAll({
-            where: {
-              game_id: game.id,
-            },
+          bot.getChatMember(channelId, id).then(async (chatMember) => {
+            if (
+              chatMember.status === "member" ||
+              chatMember.status === "administrator" ||
+              chatMember.status === "creator"
+            ) {
+              gamer.score = parseInt(gamer.score) + parseInt(message.text);
+              await gamer.save();
+              const allGamers = await psql.gamers.findAll({
+                where: {
+                  game_id: game.id,
+                },
+              });
+              allGamers.sort((a, b) => b.score - a.score);
+              sendResults(bot, game, allGamers);
+            } else {
+              bot.sendMessage(
+                game.group_id,
+                `${gamer.user_name} ismingiz tabloga qoʻshilishi uchun @zakadabiyot kanaliga a'zo boʻlishingizni soʻraymiz!`
+              );
+            }
           });
-          allGamers.sort((a, b) => b.score - a.score);
-          sendResults(bot, game, allGamers);
         }
       }
     }
