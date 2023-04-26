@@ -7,7 +7,7 @@ module.exports = async function GamerController(message, bot, psql) {
     },
     from: { id: creator_id },
   } = message;
-  const channelId = -1001982661533;
+  // const channelId = -1001982661533;
 
   const group_id = Number(message.chat.id);
 
@@ -25,60 +25,60 @@ module.exports = async function GamerController(message, bot, psql) {
         parseInt(message.text) < 1001 &&
         parseInt(message.text) > -1001
       ) {
-        bot.getChatMember(channelId, id).then(async (chatMember) => {
-          if (
-            chatMember.status === "member" ||
-            chatMember.status === "administrator" ||
-            chatMember.status === "creator" ||
-            is_bot
-          ) {
-            const gamer = await psql.gamers.findOne({
-              where: {
-                game_id: game.id,
-                user_id: id,
-              },
-            });
-            if (!gamer) {
-              await psql.gamers.create({
-                game_id: game.id,
-                user_id: id,
-                user_name: username ? `@${username}` : first_name,
-                score: parseInt(message.text),
-              });
-              const allGamers = await psql.gamers.findAll({
-                where: {
-                  game_id: game.id,
-                },
-              });
-              allGamers.sort((a, b) => b.score - a.score);
-              if (allGamers.length > 30) {
-                bot.sendMessage(
-                  game.group_id,
-                  `Tabloda koʻpi bilan 30 ishtirokchi koʻrsatiladi!`
-                );
-              } else {
-                sendResults(bot, game, allGamers);
-              }
-            } else {
-              gamer.score = parseInt(gamer.score) + parseInt(message.text);
-              await gamer.save();
-              const allGamers = await psql.gamers.findAll({
-                where: {
-                  game_id: game.id,
-                },
-              });
-              allGamers.sort((a, b) => b.score - a.score);
-              sendResults(bot, game, allGamers);
-            }
-          } else {
+        // bot.getChatMember(channelId, id).then(async (chatMember) => {
+        //   if (
+        //     chatMember.status === "member" ||
+        //     chatMember.status === "administrator" ||
+        //     chatMember.status === "creator" ||
+        //     is_bot
+        //   ) {
+        const gamer = await psql.gamers.findOne({
+          where: {
+            game_id: game.id,
+            user_id: id,
+          },
+        });
+        if (!gamer) {
+          await psql.gamers.create({
+            game_id: game.id,
+            user_id: id,
+            user_name: username ? `@${username}` : first_name,
+            score: parseInt(message.text),
+          });
+          const allGamers = await psql.gamers.findAll({
+            where: {
+              game_id: game.id,
+            },
+          });
+          allGamers.sort((a, b) => b.score - a.score);
+          if (allGamers.length > 30) {
             bot.sendMessage(
               game.group_id,
-              `${
-                username ? `@${username}` : first_name
-              } ismingiz tabloga qoʻshilishi uchun @zakadabiyot kanaliga a'zo boʻlishingizni soʻraymiz!`
+              `Tabloda koʻpi bilan 30 ishtirokchi koʻrsatiladi!`
             );
+          } else {
+            sendResults(bot, game, allGamers);
           }
-        });
+        } else {
+          gamer.score = parseInt(gamer.score) + parseInt(message.text);
+          await gamer.save();
+          const allGamers = await psql.gamers.findAll({
+            where: {
+              game_id: game.id,
+            },
+          });
+          allGamers.sort((a, b) => b.score - a.score);
+          sendResults(bot, game, allGamers);
+        }
+        // } else {
+        //   bot.sendMessage(
+        //     game.group_id,
+        //     `${
+        //       username ? `@${username}` : first_name
+        //     } ismingiz tabloga qoʻshilishi uchun @zakadabiyot kanaliga a'zo boʻlishingizni soʻraymiz!`
+        //   );
+        // }
+        // });
       }
     }
   } catch (error) {
