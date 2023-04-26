@@ -33,7 +33,7 @@ module.exports = async function GameController(
 
         await bot.sendMessage(
           id,
-          `SvoyakCalculatorBot oʻz ishini boshladi!\n\nYangilik! Tabloda ismingiz chiqishi uchun @zakadabiyot telegram kanaliga a'zo boʻlishingiz talab etiladi.`
+          `SvoyakCalculatorBot oʻz ishini boshladi!`
         );
       } else {
         await bot.sendMessage(
