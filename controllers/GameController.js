@@ -31,10 +31,7 @@ module.exports = async function GameController(
           status: "started",
         });
 
-        await bot.sendMessage(
-          id,
-          `SvoyakCalculatorBot oʻz ishini boshladi!`
-        );
+        await bot.sendMessage(id, `SvoyakCalculatorBot oʻz ishini boshladi!`);
       } else {
         await bot.sendMessage(
           id,
@@ -59,7 +56,7 @@ module.exports = async function GameController(
           finishedResults(bot, game, allGamers);
           await bot.sendMessage(
             id,
-            `Boshlovchi ${game.creator_user_name}'ga alohida tashakkur aytamiz!\n\nDasturchi: @dasturchining_tundaligi`
+            `Boshlovchi ${game.creator_user_name}'ga alohida tashakkur aytamiz!\n\nDasturchi: @dasturchining_tundaligi\nBot faoliyati davomiy va bepul boʻlishi uchun qoʻllab-quvvatlang: https://payme.uz/@supportsvoyakbot`
           );
         }
         await bot.sendMessage(id, `SvoyakCalculatorBot oʻz ishini tugatdi!`);
