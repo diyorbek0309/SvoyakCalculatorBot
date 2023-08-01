@@ -51,12 +51,7 @@ module.exports = async function GamerController(message, bot, psql) {
             },
           });
           allGamers.sort((a, b) => b.score - a.score);
-          if (allGamers.length > 30) {
-            bot.sendMessage(
-              game.group_id,
-              `Tabloda koʻpi bilan 30 ishtirokchi koʻrsatiladi!`
-            );
-          } else {
+          if (allGamers.length > 0) {
             sendResults(bot, game, allGamers);
           }
         } else {
