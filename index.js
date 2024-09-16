@@ -62,6 +62,51 @@ async function main() {
       `Shaxsiy oʻyin jarayonida ochkolarni hisoblab boruvchi bot.\nDasturchi: @dasturchining_tundaligi`
     );
   });
+
+  // Listen for any kind of message
+  bot.on("message", (msg) => {
+    const chatId = msg.chat.id;
+
+    // Check if the message is from a group and if the bot has been added to the group
+    if (msg.chat.type === "supergroup" || msg.chat.type === "group") {
+      if (msg.new_chat_members) {
+        msg.new_chat_members.forEach((member) => {
+          if (member.id === bot.id) {
+            // The bot has been added to the group
+            bot.sendMessage(
+              chatId,
+              "Hello everyone! I have been added to this group."
+            );
+          }
+        });
+      }
+    }
+  });
+
+  // // Handle when the bot is added to a group
+  // bot.on("my_chat_member", (update) => {
+  //   const chatId = update.chat.id;
+  //   const status = update.my_chat_member.new_chat_member.status;
+
+  //   if (
+  //     status === "member" ||
+  //     status === "administrator" ||
+  //     status === "owner"
+  //   ) {
+  //     bot.sendMessage(chatId, "I have joined the group as a member.");
+  //   }
+  // });
+
+  // // Handle when the bot is removed from a group
+  // bot.on("chat_member", (update) => {
+  //   const chatId = update.chat.id;
+  //   const status = update.chat_member.new_chat_member.status;
+
+  //   if (status === "left" || status === "kicked") {
+  //     bot.sendMessage(chatId, "I have been removed from the group.");
+  //   }
+  // });
+
 }
 
 main();
