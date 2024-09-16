@@ -1,5 +1,6 @@
 module.exports = async function GroupController(message, bot, psql) {
   const { id, title } = message.chat;
+  const { username, first_name } = message.from;
 
   try {
     const newGroup = await psql.groups.findOne({
@@ -7,9 +8,10 @@ module.exports = async function GroupController(message, bot, psql) {
         id,
       },
     });
-    console.log(bot.getChat(id));
+    const groupInfo = await bot.getChat(id);
     const totalGroupsCount = await psql.groups.count();
-
+    console.log(groupInfo);
+    
     if (!newGroup) {
       await psql.groups.create({
         id,
@@ -19,7 +21,7 @@ module.exports = async function GroupController(message, bot, psql) {
       await bot.sendMessage(
         id,
         `Assalomu aleykum! ${
-          message.from.username ?? message.from.first_name
+          username ? "@" + username : first_name
         } SvoyakCalculatorBotni guruhingizga qo'shganingiz uchun raxmat!`
       );
       await bot.sendMessage(
@@ -32,8 +34,8 @@ module.exports = async function GroupController(message, bot, psql) {
       await bot.sendMessage(
         id,
         `Assalomu aleykum! ${
-          message.from.username ?? message.from.first_name
-        } SvoyakCalculatorBotni guruhingizga qo'shganingiz uchun raxmat!`
+          username ? "@" + username : first_name
+        } SvoyakCalculatorBotni guruhingizga qayta qo'shganingiz uchun raxmat!`
       );
       await bot.sendMessage(
         "175604385",
