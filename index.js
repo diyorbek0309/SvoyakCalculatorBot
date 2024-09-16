@@ -89,28 +89,28 @@ async function main() {
   });
 
   // // Handle when the bot is added to a group
-  // bot.on("my_chat_member", (update) => {
-  //   const chatId = update.chat.id;
-  //   const status = update.my_chat_member.new_chat_member.status;
+  bot.on("my_chat_member", (update) => {
+    const chatId = update.chat.id;
+    const status = update.my_chat_member.new_chat_member.status;
 
-  //   if (
-  //     status === "member" ||
-  //     status === "administrator" ||
-  //     status === "owner"
-  //   ) {
-  //     bot.sendMessage(chatId, "I have joined the group as a member.");
-  //   }
-  // });
+    if (
+      status === "member" ||
+      status === "administrator" ||
+      status === "owner"
+    ) {
+      bot.sendMessage(chatId, "I have joined the group as a member.");
+    }
+  });
 
-  // // Handle when the bot is removed from a group
-  // bot.on("chat_member", (update) => {
-  //   const chatId = update.chat.id;
-  //   const status = update.chat_member.new_chat_member.status;
+  // Handle when the bot is removed from a group
+  bot.on("chat_member", (update) => {
+    const chatId = update.chat.id;
+    const status = update.chat_member.new_chat_member.status;
 
-  //   if (status === "left" || status === "kicked") {
-  //     bot.sendMessage(chatId, "I have been removed from the group.");
-  //   }
-  // });
+    if (status === "left" || status === "kicked") {
+      bot.sendMessage(chatId, "I have been removed from the group.");
+    }
+  });
 }
 
 main();
