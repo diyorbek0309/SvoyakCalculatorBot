@@ -67,12 +67,15 @@ async function main() {
   bot.on("message", (msg) => {
     const chatId = msg.chat.id;
 
-    // Check if the message is from a group and if the bot has been added to the group
+    console.log(msg);
     if (msg.chat.type === "supergroup" || msg.chat.type === "group") {
+      console.log(msg.chat);
       if (msg.new_chat_members) {
         msg.new_chat_members.forEach((member) => {
+          console.log(member);
+
           if (member.id === bot.id) {
-            // The bot has been added to the group
+            console.log(member);
             bot.sendMessage(
               chatId,
               "Hello everyone! I have been added to this group."
@@ -106,7 +109,6 @@ async function main() {
   //     bot.sendMessage(chatId, "I have been removed from the group.");
   //   }
   // });
-
 }
 
 main();
