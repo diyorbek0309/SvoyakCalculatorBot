@@ -7,24 +7,38 @@ module.exports = async function GroupController(message, bot, psql) {
         id,
       },
     });
+    console.log(bot.getChat(id));
+    const totalGroupsCount = await psql.groups.count();
 
     if (!newGroup) {
       await psql.groups.create({
         id,
         title,
       });
-      
+
       await bot.sendMessage(
         id,
-        `SvoyakCalculatorBotni guruhingizga qo'shganingiz uchun raxmat!`
+        `Assalomu aleykum! ${
+          message.from.username ?? message.from.first_name
+        } SvoyakCalculatorBotni guruhingizga qo'shganingiz uchun raxmat!`
       );
-      await bot.sendMessage("175604385", `${id} - ${title} (yangi)`);
+      await bot.sendMessage(
+        "175604385",
+        `${id} - ${title} (new)\n\nJami guruhlar soni: ${
+          totalGroupsCount + 1
+        }\nJami obunachilar: 120`
+      );
     } else {
       await bot.sendMessage(
         id,
-        `SvoyakCalculatorBotni guruhingizga qaytarganingiz uchun raxmat!`
+        `Assalomu aleykum! ${
+          message.from.username ?? message.from.first_name
+        } SvoyakCalculatorBotni guruhingizga qo'shganingiz uchun raxmat!`
       );
-      await bot.sendMessage("175604385", `${id} - ${title} (qayta qo'shildi)`);
+      await bot.sendMessage(
+        "175604385",
+        `${id} - ${title} (new)\n\nJami guruhlar soni: ${totalGroupsCount}\nJami obunachilar: 120`
+      );
     }
   } catch (error) {
     console.log(error);

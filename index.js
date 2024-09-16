@@ -75,15 +75,6 @@ async function main() {
       }
     }
   });
-
-  bot.on("chat_member", (update) => {
-    const chatId = update.chat.id;
-    const status = update.chat_member.new_chat_member.status;
-
-    if (status === "left" || status === "kicked") {
-      bot.sendMessage("175604385", "I have been removed from the group.");
-    }
-  });
 }
 
 main();
