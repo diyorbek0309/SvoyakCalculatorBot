@@ -67,10 +67,12 @@ async function main() {
   bot.on("message", (msg) => {
     const chatId = msg.chat.id;
 
-    console.log(msg);
     if (msg.chat.type === "supergroup" || msg.chat.type === "group") {
-      console.log(msg.chat);
       if (msg.new_chat_members) {
+        console.log(msg);
+        console.log(msg.new_chat_members);
+        
+        
         msg.new_chat_members.forEach((member) => {
           console.log(member);
 
