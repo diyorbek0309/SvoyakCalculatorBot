@@ -1,5 +1,5 @@
-module.exports = async function GroupController(group, bot, psql) {
-  const { id, title } = group;
+module.exports = async function GroupController(message, bot, psql) {
+  const { id, title } = message.chat;
 
   try {
     const newGroup = await psql.groups.findOne({
@@ -13,16 +13,18 @@ module.exports = async function GroupController(group, bot, psql) {
         id,
         title,
       });
-
+      
       await bot.sendMessage(
         id,
         `SvoyakCalculatorBotni guruhingizga qo'shganingiz uchun raxmat!`
       );
+      await bot.sendMessage("175604385", `${id} - ${title} (yangi)`);
     } else {
       await bot.sendMessage(
         id,
         `SvoyakCalculatorBotni guruhingizga qaytarganingiz uchun raxmat!`
       );
+      await bot.sendMessage("175604385", `${id} - ${title} (qayta qo'shildi)`);
     }
   } catch (error) {
     console.log(error);
