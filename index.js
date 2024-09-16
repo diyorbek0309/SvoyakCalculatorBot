@@ -70,13 +70,11 @@ async function main() {
     if (msg.chat.type === "supergroup" || msg.chat.type === "group") {
       if (msg.new_chat_members) {
         console.log(msg);
-        console.log(msg.new_chat_members);
-        
         
         msg.new_chat_members.forEach((member) => {
           console.log(member);
 
-          if (member.id === bot.id) {
+          if (member.id == 5536335495) {
             console.log(member);
             bot.sendMessage(
               chatId,
