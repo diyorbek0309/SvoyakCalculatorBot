@@ -43,7 +43,7 @@ async function main() {
     }
   });
 
-  bot.onText(/\/getStats/, (message) => {
+  bot.onText(/\/stats/, (message) => {
     ExtraControllers.StatsController(message, bot, psql);
   });
 

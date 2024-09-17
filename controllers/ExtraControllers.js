@@ -1,4 +1,4 @@
-const sendResults = require("../services/sendResults");
+const sendResults = require('../services/sendResults');
 
 module.exports = class ExtraControllers {
   static async MessageController(message, bot, psql) {
@@ -26,40 +26,20 @@ module.exports = class ExtraControllers {
   }
 
   static async StatsController(message, bot, psql) {
-    const group_id = message.chat.id;
-    const games = await psql.games.findAll();
-    const botId = 5536335495;
-    let groupIDs = [];
-    games.forEach((game) => groupIDs.push(game.group_id));
-    groupIDs = [...new Set(groupIDs)];
+    const totalGroupsCount = await psql.groups.count();
+    const totalGamers = await psql.gamers.count();
+    const totalGames = await psql.games.count();
+    const totalSubscribersCountResult = await psql.groups.sum(
+      'subscribers_count'
+    );
+    const totalSubscribersCount = totalSubscribersCountResult || 0;
 
-    // try {
-    // bot.getChatMember(groupIDs[8], botId).then((chatMember) => {
-    //   if (chatMember.status === "member") {
-    //     console.log("Bot is a member of the group", groupIDs[8]);
-    //   } else {
-    //     console.log("Bot is not a member of the group", groupIDs[8]);
-    //   }
-    // });
-    // groupIDs.forEach(async (groupID) => {
-    //   bot.getChatMember(groupID, botId).then((chatMember) => {
-    //     if (chatMember.status === "member") {
-    //       console.log("Bot is a member of the group", groupID);
-    //     } else {
-    //       console.log("Bot is not a member of the group", groupID);
-    //     }
-    //   });
-
-    //   // const group = await bot.getChat(groupID);
-    //   // console.log(group);
-    //   // const count = await bot.getChatMembersCount(groupID);
-    //   // const message = `Group Title: ${group.title}\nUser's count: ${count}`;
-    //   // console.log(message);
-    //   // await bot.sendMessage(group_id, message);
-    // });
-    // } catch (error) {
-    //   console.log(error.message);
-    // }
+    await bot.sendMessage(
+      message.chat.id,
+      `Total groups: ${totalGroupsCount}\nTotal subscribers: ${
+        totalSubscribersCount + chatMemberCount
+      }\nTotal games: ${totalGames}\nTotal gamers: ${totalGamers}`
+    );
   }
 
   static async ChangeCreator(message, bot, psql) {
@@ -81,7 +61,7 @@ module.exports = class ExtraControllers {
     const game = await psql.games.findOne({
       where: {
         group_id,
-        status: "started",
+        status: 'started',
       },
     });
 
@@ -93,19 +73,19 @@ module.exports = class ExtraControllers {
           adminIds.includes(old_creator_id)
         ) {
           game.creator_id = id;
-          game.creator_user_name = username ? "@" + username : first_name;
+          game.creator_user_name = username ? '@' + username : first_name;
           await game.save();
           await bot.sendMessage(
             group_id,
             `Boshlovchi muvaffaqiyatli oʻzgartirildi. Endi ${
-              username ? "@" + username : first_name
+              username ? '@' + username : first_name
             } boshlovchi!`
           );
         } else {
           await bot.sendMessage(
             group_id,
             `${
-              old_username ? "@" + old_username : old_first_name
+              old_username ? '@' + old_username : old_first_name
             } siz boshlovchi yoki admin emassiz!`
           );
         }
@@ -131,7 +111,7 @@ module.exports = class ExtraControllers {
     const game = await psql.games.findOne({
       where: {
         group_id,
-        status: "started",
+        status: 'started',
       },
     });
 
@@ -155,7 +135,7 @@ module.exports = class ExtraControllers {
           sendResults(bot, game, allGamers);
           await bot.sendMessage(
             group_id,
-            `${username ? "@" + username : first_name} tablodan oʻchirildi!`
+            `${username ? '@' + username : first_name} tablodan oʻchirildi!`
           );
         }
       }
@@ -179,7 +159,7 @@ module.exports = class ExtraControllers {
     try {
       await psql.games.destroy({
         where: {
-          status: "finished",
+          status: 'finished',
         },
       });
       await bot.sendMessage(group_id, `Bajarildi apka ✅`);

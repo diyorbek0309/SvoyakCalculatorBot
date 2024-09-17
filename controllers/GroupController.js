@@ -55,7 +55,9 @@ module.exports = class GroupController {
           '175604385',
           `Added:\n${id} - ${title} \n${
             groupInfo.invite_link ?? ''
-          } (old)\n\nTotal groups: ${totalGroupsCount}\nTotal subscribers: ${totalSubscribersCount}`
+          } (old)\n\nTotal groups: ${totalGroupsCount}\nTotal subscribers: ${
+            totalSubscribersCount + chatMemberCount
+          }`
         );
       }
     } catch (error) {
