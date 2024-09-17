@@ -38,7 +38,7 @@ module.exports = class GroupController {
           '175604385',
           `Added:\n${id} - ${title} \n${groupInfo.invite_link ?? ''} ${
             isOld ? '(old)' : '(new)'
-          }\n\nJami guruhlar soni: ${totalGroupsCount + 1}\nJami obunachilar: ${
+          }\n\nTotal groups: ${totalGroupsCount + 1}\nTotal subscribers: ${
             totalSubscribersCount + chatMemberCount
           }`
         );
@@ -55,7 +55,7 @@ module.exports = class GroupController {
           '175604385',
           `Added:\n${id} - ${title} \n${
             groupInfo.invite_link ?? ''
-          } (old)\n\nJami guruhlar soni: ${totalGroupsCount}\nJami obunachilar: ${totalSubscribersCount}`
+          } (old)\n\nTotal groups: ${totalGroupsCount}\nTotal subscribers: ${totalSubscribersCount}`
         );
       }
     } catch (error) {
@@ -88,7 +88,7 @@ module.exports = class GroupController {
             '175604385',
             `Removed:\n${id} - ${title} \n${
               group.invite_link ?? ''
-            }\n\nJami guruhlar soni: ${totalGroupsCount}\nJami obunachilar: ${totalSubscribersCount}`
+            }\n\nTotal groups: ${totalGroupsCount}\nTotal subscribers: ${totalSubscribersCount}`
           );
         }
       } catch (error) {
