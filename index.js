@@ -1,10 +1,10 @@
-const TelegramBot = require("node-telegram-bot-api");
-const { TOKEN } = require("./config");
-const ExtraControllers = require("./controllers/ExtraControllers");
-const GameController = require("./controllers/GameController");
-const GamerController = require("./controllers/GamerController");
-const GroupController = require("./controllers/GroupController");
-const postgres = require("./modules/postgres");
+const TelegramBot = require('node-telegram-bot-api');
+const { TOKEN } = require('./config');
+const ExtraControllers = require('./controllers/ExtraControllers');
+const GameController = require('./controllers/GameController');
+const GamerController = require('./controllers/GamerController');
+const GroupController = require('./controllers/GroupController');
+const postgres = require('./modules/postgres');
 
 const bot = new TelegramBot(TOKEN, { polling: true });
 
@@ -19,11 +19,12 @@ async function main() {
   });
 
   bot.onText(/\/startSvoyak/, (message) => {
-    GameController(message.chat, message.from, "start", bot, psql);
+    GameController(message.chat, message.from, 'start', bot, psql);
+    GroupController(message, bot, psql, true);
   });
 
   bot.onText(/\/endSvoyak/, (message) => {
-    GameController(message.chat, message.from, "end", bot, psql);
+    GameController(message.chat, message.from, 'end', bot, psql);
   });
 
   bot.onText(/^[-+]?\d+?$/, (message) => {
@@ -64,16 +65,20 @@ async function main() {
     );
   });
 
-  bot.on("message", (message) => {
-    if (message.chat.type === "supergroup" || message.chat.type === "group") {
+  bot.on('message', (message) => {
+    if (message.chat.type === 'supergroup' || message.chat.type === 'group') {
       if (message.new_chat_members) {
         message.new_chat_members.forEach((member) => {
           if (member.id == 5536335495) {
-            GroupController(message, bot, psql);
+            GroupController.saveGroup(message, bot, psql);
           }
         });
       }
     }
+  });
+
+  bot.on('my_chat_member', async (message) => {
+    GroupController.removeGroup(message, bot, psql);
   });
 }
 

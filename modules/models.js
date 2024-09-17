@@ -1,6 +1,6 @@
 module.exports = class Models {
   static async UserModel(Sequelize, sequelize) {
-    return await sequelize.define("user", {
+    return await sequelize.define('user', {
       chat_id: {
         type: Sequelize.DataTypes.BIGINT,
         primaryKey: true,
@@ -8,7 +8,7 @@ module.exports = class Models {
     });
   }
   static async GroupModel(Sequelize, sequelize) {
-    return await sequelize.define("group", {
+    return await sequelize.define('group', {
       id: {
         type: Sequelize.DataTypes.BIGINT,
         primaryKey: true,
@@ -16,10 +16,18 @@ module.exports = class Models {
       title: {
         type: Sequelize.DataTypes.STRING,
       },
+      subscribers_count: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: true,
+      },
+      invite_link: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: true,
+      },
     });
   }
   static async GameModel(Sequelize, sequelize) {
-    return await sequelize.define("game", {
+    return await sequelize.define('game', {
       id: {
         type: Sequelize.DataTypes.UUID,
         defaultValue: Sequelize.DataTypes.UUIDV4,
@@ -40,7 +48,7 @@ module.exports = class Models {
     });
   }
   static async GamerModel(Sequelize, sequelize) {
-    return await sequelize.define("gamer", {
+    return await sequelize.define('gamer', {
       id: {
         type: Sequelize.DataTypes.UUID,
         defaultValue: Sequelize.DataTypes.UUIDV4,
