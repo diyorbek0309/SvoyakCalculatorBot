@@ -26,20 +26,20 @@ module.exports = class ExtraControllers {
   }
 
   static async StatsController(message, bot, psql) {
-    const totalGroupsCount = await psql.groups.count();
-    const totalGamers = await psql.gamers.count();
-    const totalGames = await psql.games.count();
-    const totalSubscribersCountResult = await psql.groups.sum(
-      'subscribers_count'
-    );
-    const totalSubscribersCount = totalSubscribersCountResult || 0;
+    if (message.chat.id == 175604385) {
+      const totalGroupsCount = await psql.groups.count();
+      const totalGamers = await psql.gamers.count();
+      const totalGames = await psql.games.count();
+      const totalSubscribersCountResult = await psql.groups.sum(
+        'subscribers_count'
+      );
+      const totalSubscribersCount = totalSubscribersCountResult || 0;
 
-    await bot.sendMessage(
-      message.chat.id,
-      `Total groups: ${totalGroupsCount}\nTotal subscribers: ${
-        totalSubscribersCount + chatMemberCount
-      }\nTotal games: ${totalGames}\nTotal gamers: ${totalGamers}`
-    );
+      await bot.sendMessage(
+        '175604385',
+        `Total groups: ${totalGroupsCount}\nTotal subscribers: ${totalSubscribersCount}\nTotal games: ${totalGames}\nTotal gamers: ${totalGamers}`
+      );
+    }
   }
 
   static async ChangeCreator(message, bot, psql) {
@@ -162,7 +162,7 @@ module.exports = class ExtraControllers {
           status: 'finished',
         },
       });
-      await bot.sendMessage(group_id, `Bajarildi apka ✅`);
+      await bot.sendMessage(group_id, `Done ✅`);
     } catch (error) {
       await bot.sendMessage(
         group_id,
