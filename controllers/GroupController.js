@@ -90,7 +90,9 @@ module.exports = class GroupController {
             '175604385',
             `Removed:\n${id} - ${title} \n${
               group.invite_link ?? ''
-            }\n\nTotal groups: ${totalGroupsCount}\nTotal subscribers: ${totalSubscribersCount}`
+            }\n\nTotal groups: ${totalGroupsCount - 1}\nTotal subscribers: ${
+              totalSubscribersCount - group.subscribers_count
+            }`
           );
         }
       } catch (error) {

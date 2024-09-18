@@ -20,7 +20,7 @@ async function main() {
 
   bot.onText(/\/startSvoyak/, (message) => {
     GameController(message.chat, message.from, 'start', bot, psql);
-    GroupController(message, bot, psql, true);
+    GroupController.saveGroup(message, bot, psql, true);
   });
 
   bot.onText(/\/endSvoyak/, (message) => {
