@@ -50,7 +50,6 @@ module.exports = class GroupController {
               username ? '@' + username : first_name
             } SvoyakCalculatorBotni guruhingizga qayta qoʻshganingiz uchun raxmat!`
           );
-        } else {
           await bot.sendMessage(
             '175604385',
             `Added:\n${id} - ${title} \n${
