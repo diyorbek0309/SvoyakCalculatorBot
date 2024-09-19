@@ -50,15 +50,16 @@ module.exports = class GroupController {
               username ? '@' + username : first_name
             } SvoyakCalculatorBotni guruhingizga qayta qoʻshganingiz uchun raxmat!`
           );
+        } else {
+          await bot.sendMessage(
+            '175604385',
+            `Added:\n${id} - ${title} \n${
+              groupInfo.invite_link ?? ''
+            } (old)\n\nTotal groups: ${totalGroupsCount}\nTotal subscribers: ${
+              totalSubscribersCount + chatMemberCount
+            }`
+          );
         }
-        await bot.sendMessage(
-          '175604385',
-          `Added:\n${id} - ${title} \n${
-            groupInfo.invite_link ?? ''
-          } (old)\n\nTotal groups: ${totalGroupsCount}\nTotal subscribers: ${
-            totalSubscribersCount + chatMemberCount
-          }`
-        );
       }
     } catch (error) {
       console.log(error);
