@@ -100,4 +100,85 @@ module.exports = class GroupController {
       }
     }
   }
+
+  static async postForwardingHandler(message, bot, psql) {
+    const chatId = message.chat.id;
+    let awaitingPostLink = true;
+    let channelId = '@zakadabiyot';
+
+    if (chatId == '175604385') {
+      await bot.sendMessage(
+        chatId,
+        'Please send the link to the post you want to forward.'
+      );
+    }
+
+    bot.on('message', async (msg) => {
+      const chatId = msg.chat.id;
+      const text = msg.text;
+
+      if (awaitingPostLink && text && chatId == '175604385') {
+        try {
+          const postLinkMatch = text.match(/\/(\d+)$/);
+          if (!postLinkMatch) {
+            awaitingPostLink = false;
+            await bot.sendMessage(
+              chatId,
+              'Invalid post link. Please make sure the link is correct.'
+            );
+            return;
+          }
+
+          const postId = postLinkMatch[1];
+          awaitingPostLink = false;
+
+          const groups = await psql.groups.findAll({
+            attributes: ['id'],
+          });
+
+          if (groups.length === 0) {
+            await bot.sendMessage(
+              chatId,
+              'No groups found to forward the post to.'
+            );
+            return;
+          }
+
+          let successCount = 0;
+          let failureCount = 0;
+
+          for (const group of groups) {
+            try {
+              await bot.forwardMessage(group.id, channelId, postId);
+              successCount++;
+            } catch (error) {
+              await bot.sendMessage(
+                chatId,
+                `Failed to forward message to group ${group.id}: ${
+                  group.title
+                }\n${group.invite_link ?? ''}\n${error.message}`
+              );
+              console.error(
+                `Failed to forward message to group ${group.id}:`,
+                error.message
+              );
+              failureCount++;
+            }
+          }
+
+          await bot.sendMessage(
+            chatId,
+            `Post forwarded to ${successCount} groups successfully.\n` +
+              `Failed to forward to ${failureCount} groups.`
+          );
+        } catch (error) {
+          console.error('Error forwarding post:', error);
+          await bot.sendMessage(
+            chatId,
+            'An error occurred while trying to forward the post.'
+          );
+        }
+      }
+    });
+  }
 };
