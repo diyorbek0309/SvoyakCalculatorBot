@@ -182,9 +182,90 @@ module.exports = class GroupController {
     });
   }
 
+  static async forwardMessagesToAdmin(bot) {
+    let isForwarding = false; // Flag to check if forwarding is active
+    let forwardingGroupId = null; // Stores the groupId from which messages will be forwarded
+    let awaitingGroupId = false; // Flag to know when the bot is waiting for the groupId input
+    const adminId = 175604385; // Admin ID
+
+    // Handle the '/startForwarding' command
+    bot.onText(/\/startForwarding/, async (msg) => {
+      const userId = msg.from.id;
+
+      // Only allow the admin to use this command
+      if (userId !== adminId) {
+        await bot.sendMessage(
+          msg.chat.id,
+          'Only the bot admin can use this command.'
+        );
+        return;
+      }
+
+      // Prompt the admin to enter the groupId
+      awaitingGroupId = true;
+      await bot.sendMessage(
+        adminId,
+        'Please enter the groupId of the group you want to forward messages from:'
+      );
+    });
+
+    // Handle the '/stopForwarding' command
+    bot.onText(/\/stopForwarding/, async (msg) => {
+      const userId = msg.from.id;
+
+      // Only allow the admin to stop forwarding
+      if (userId !== adminId) {
+        await bot.sendMessage(
+          msg.chat.id,
+          'Only the bot admin can use this command.'
+        );
+        return;
+      }
+
+      // Stop forwarding messages
+      if (isForwarding) {
+        isForwarding = false;
+        forwardingGroupId = null;
+        await bot.sendMessage(
+          adminId,
+          'Forwarding of messages has been stopped.'
+        );
+      } else {
+        await bot.sendMessage(adminId, 'Forwarding is not active.');
+      }
+    });
+
+    // Handle message when waiting for the groupId input
+    bot.on('message', async (msg) => {
+      const userId = msg.from.id;
+
+      // Handle the groupId input from admin after /startForwarding
+      if (awaitingGroupId && userId === adminId) {
+        forwardingGroupId = msg.text; // Get the entered groupId
+        awaitingGroupId = false;
+        isForwarding = true; // Start forwarding
+
+        await bot.sendMessage(
+          adminId,
+          `Forwarding messages from group ${forwardingGroupId} to admin has started.`
+        );
+      }
+
+      // Forward messages if forwarding is active and the message is from the specified group
+      if (isForwarding && msg.chat.id.toString() === forwardingGroupId) {
+        try {
+          // Forward the message to the admin
+          await bot.forwardMessage(adminId, forwardingGroupId, msg.message_id);
+        } catch (error) {
+          console.error('Error forwarding message:', error);
+        }
+      }
+    });
+  }
+
   static async showAllMembersHandler(message, bot) {
     const userId = message.from.id;
-    awaitingChatId = true;
+    let awaitingChatId = true;
 
     if (userId != '175604385') {
       await bot.sendMessage(chatId, 'Only the bot admin can use this command.');

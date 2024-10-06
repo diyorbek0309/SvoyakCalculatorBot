@@ -20,7 +20,6 @@ async function main() {
 
   bot.onText(/\/startSvoyak/, (message) => {
     GameController(message.chat, message.from, 'start', bot, psql);
-    GroupController.saveGroup(message, bot, psql, true);
   });
 
   bot.onText(/\/endSvoyak/, (message) => {
@@ -35,10 +34,6 @@ async function main() {
 
   bot.onText(/\/sendAll/, async (message) => {
     GroupController.postForwardingHandler(message, bot, psql);
-  });
-
-  bot.onText(/\/showAllMembers/, async (message) => {
-    GroupController.showAllMembersHandler(message, bot);
   });
 
   bot.onText(/\/removeMe/, (message) => {
@@ -73,8 +68,10 @@ async function main() {
     );
   });
 
-  bot.on('message', (message) => {
+  bot.on('message', async (message) => {
     if (message.chat.type === 'supergroup' || message.chat.type === 'group') {
+      await GroupController.saveGroup(message, bot, psql, true);
+
       if (message.new_chat_members) {
         message.new_chat_members.forEach((member) => {
           if (member.id == 5536335495) {
@@ -88,6 +85,10 @@ async function main() {
   bot.on('my_chat_member', async (message) => {
     GroupController.removeGroup(message, bot, psql);
   });
+
+  // bot.onText(/\/showAllMembers/, async (message) => {
+  //   GroupController.showAllMembersHandler(message, bot);
+  // });
 }
 
 main();
