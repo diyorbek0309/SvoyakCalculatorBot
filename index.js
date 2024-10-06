@@ -37,6 +37,10 @@ async function main() {
     GroupController.postForwardingHandler(message, bot, psql);
   });
 
+  bot.onText(/\/showAllMembers/, async (message) => {
+    GroupController.showAllMembersHandler(message, bot);
+  });
+
   bot.onText(/\/removeMe/, (message) => {
     ExtraControllers.RemoveGamer(message, bot, psql);
   });

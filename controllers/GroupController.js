@@ -181,4 +181,69 @@ module.exports = class GroupController {
       }
     });
   }
+
+  static async showAllMembersHandler(message, bot) {
+    const userId = message.from.id;
+    awaitingChatId = true;
+
+    if (userId != '175604385') {
+      await bot.sendMessage(chatId, 'Only the bot admin can use this command.');
+      return;
+    }
+
+    bot.on('message', async (msg) => {
+      const userId = msg.from.id;
+
+      if (awaitingChatId && userId == '175604385') {
+        const chatId = msg.text;
+        awaitingChatId = false;
+
+        try {
+          const memberCount = await bot.getChatMemberCount(chatId);
+
+          if (memberCount > 100) {
+            await bot.sendMessage(
+              userId,
+              'This command can only be used in groups with less than 100 members.'
+            );
+            return;
+          }
+
+          const membersList = [];
+
+          for (let i = 0; i < memberCount; i++) {
+            try {
+              const member = await bot.getChatMember(chatId, i);
+              const username =
+                member.user.username || member.user.first_name || 'Unknown';
+              membersList.push(username);
+            } catch (error) {
+              console.error(
+                `Failed to get member with index ${i}:`,
+                error.message
+              );
+            }
+          }
+
+          if (membersList.length === 0) {
+            await bot.sendMessage(userId, 'No members found in this group.');
+            return;
+          }
+
+          await bot.sendMessage(
+            userId,
+            `Group members (${
+              membersList.length
+            } members):\n\n${membersList.join('\n')}`
+          );
+        } catch (error) {
+          console.error('Error fetching group members:', error);
+          await bot.sendMessage(
+            userId,
+            'An error occurred while fetching group members. Make sure the chatId is correct.'
+          );
+        }
+      }
+    });
+  }
 };
