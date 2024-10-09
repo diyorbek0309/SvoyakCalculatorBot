@@ -104,7 +104,6 @@ module.exports = class GroupController {
   static async postForwardingHandler(message, bot, psql) {
     const chatId = message.chat.id;
     let awaitingPostLink = true;
-    let channelId = '@zakadabiyot';
 
     if (chatId == '175604385') {
       await bot.sendMessage(
@@ -119,7 +118,7 @@ module.exports = class GroupController {
 
       if (awaitingPostLink && text && chatId == '175604385') {
         try {
-          const postLinkMatch = text.match(/\/(\d+)$/);
+          const postLinkMatch = text.match(/t\.me\/([\w_]+)\/(\d+)/);
           if (!postLinkMatch) {
             awaitingPostLink = false;
             await bot.sendMessage(
@@ -129,7 +128,8 @@ module.exports = class GroupController {
             return;
           }
 
-          const postId = postLinkMatch[1];
+          const channelId = `@${postLinkMatch[1]}`;
+          const postId = postLinkMatch[2];
           awaitingPostLink = false;
 
           const groups = await psql.groups.findAll({
