@@ -132,6 +132,7 @@ module.exports = class GroupController {
           const postId = postLinkMatch[2];
           awaitingPostLink = false;
 
+          // const groups = ['-1001708741042', '-1001650483058'];
           const groups = await psql.groups.findAll({
             attributes: ['id'],
           });
@@ -149,7 +150,8 @@ module.exports = class GroupController {
 
           for (const group of groups) {
             try {
-              await bot.forwardMessage(group.id, channelId, postId);
+              await bot.copyMessage(group.id, channelId, postId);
+
               successCount++;
             } catch (error) {
               await bot.sendMessage(
