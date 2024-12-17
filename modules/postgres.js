@@ -17,6 +17,8 @@ async function postgres() {
 
     await sequelize.sync({ force: false });
 
+    console.log("Connected to DB");
+
     return db;
   } catch (error) {
     console.error("Unable to connect to the database: ", error);
