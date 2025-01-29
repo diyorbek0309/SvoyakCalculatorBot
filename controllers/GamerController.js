@@ -3,11 +3,10 @@ const sendResults = require('../services/sendResults');
 module.exports = async function GamerController(message, bot, psql) {
   const {
     reply_to_message: {
-      from: { id, username, first_name, is_bot },
+      from: { id, username, first_name },
     },
     from: { id: creator_id },
   } = message;
-  // const channelId = -1001982661533;
 
   const group_id = Number(message.chat.id);
 
@@ -25,13 +24,6 @@ module.exports = async function GamerController(message, bot, psql) {
         parseInt(message.text) < 1001 &&
         parseInt(message.text) > -1001
       ) {
-        // bot.getChatMember(channelId, id).then(async (chatMember) => {
-        //   if (
-        //     chatMember.status === "member" ||
-        //     chatMember.status === "administrator" ||
-        //     chatMember.status === "creator" ||
-        //     is_bot
-        //   ) {
         const gamer = await psql.gamers.findOne({
           where: {
             game_id: game.id,
@@ -65,22 +57,13 @@ module.exports = async function GamerController(message, bot, psql) {
           allGamers.sort((a, b) => b.score - a.score);
           sendResults(bot, game, allGamers);
         }
-        // } else {
-        //   bot.sendMessage(
-        //     game.group_id,
-        //     `${
-        //       username ? `@${username}` : first_name
-        //     } ismingiz tabloga qoʻshilishi uchun @zakadabiyot kanaliga a'zo boʻlishingizni soʻraymiz!`
-        //   );
-        // }
-        // });
       }
     }
   } catch (error) {
     console.log(error);
-    // await bot.sendMessage(
-    //   group_id,
-    //   `Qandaydir xatolik sodir boʻldi. Iltimos, oʻyinni qayta boshlang!`
-    // );
+    await bot.sendMessage(
+      process.env.ADMIN,
+      `Qandaydir xatolik sodir boʻldi: ${error}`
+    );
   }
 };

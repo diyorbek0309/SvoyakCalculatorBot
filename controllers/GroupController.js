@@ -62,7 +62,10 @@ module.exports = class GroupController {
       }
     } catch (error) {
       console.log(error);
-      await bot.sendMessage(id, `Qandaydir xatolik sodir boʻldi!`);
+      await bot.sendMessage(
+        process.env.ADMIN,
+        `Qandaydir xatolik sodir boʻldi: ${error}`
+      );
     }
   }
 
@@ -97,6 +100,10 @@ module.exports = class GroupController {
         }
       } catch (error) {
         console.error(`Failed to remove group from DB: ${error.message}`);
+        await bot.sendMessage(
+          process.env.ADMIN,
+          `Failed to remove group from DB: ${error.message}`
+        );
       }
     }
   }
@@ -132,7 +139,6 @@ module.exports = class GroupController {
           const postId = postLinkMatch[2];
           awaitingPostLink = false;
 
-          // const groups = ['-1001708741042', '-1001650483058'];
           const groups = await psql.groups.findAll({
             attributes: ['id'],
           });
@@ -184,154 +190,99 @@ module.exports = class GroupController {
     });
   }
 
-  static async forwardMessagesToAdmin(bot) {
-    let isForwarding = false; // Flag to check if forwarding is active
-    let forwardingGroupId = null; // Stores the groupId from which messages will be forwarded
-    let awaitingGroupId = false; // Flag to know when the bot is waiting for the groupId input
-    const adminId = 175604385; // Admin ID
+  static async forwardMessagesToAdmin(bot, psql) {
+    let isForwarding = false;
+    let forwardingGroupId = null;
+    let awaitingGroupId = true;
+    const adminId = 175604385;
 
-    // Handle the '/startForwarding' command
-    bot.onText(/\/startForwarding/, async (msg) => {
-      const userId = msg.from.id;
+    bot.removeAllListeners('message');
 
-      // Only allow the admin to use this command
-      if (userId !== adminId) {
-        await bot.sendMessage(
-          msg.chat.id,
-          'Only the bot admin can use this command.'
-        );
-        return;
-      }
-
-      // Prompt the admin to enter the groupId
-      awaitingGroupId = true;
-      await bot.sendMessage(
-        adminId,
-        'Please enter the groupId of the group you want to forward messages from:'
-      );
-    });
-
-    // Handle the '/stopForwarding' command
     bot.onText(/\/stopForwarding/, async (msg) => {
-      const userId = msg.from.id;
-
-      // Only allow the admin to stop forwarding
-      if (userId !== adminId) {
-        await bot.sendMessage(
-          msg.chat.id,
-          'Only the bot admin can use this command.'
-        );
-        return;
-      }
-
-      // Stop forwarding messages
-      if (isForwarding) {
+      if (isForwarding && msg.from.id === adminId) {
         isForwarding = false;
         forwardingGroupId = null;
-        await bot.sendMessage(
-          adminId,
-          'Forwarding of messages has been stopped.'
-        );
+        await bot.sendMessage(adminId, '🚫 Forwarding has been stopped.');
       } else {
-        await bot.sendMessage(adminId, 'Forwarding is not active.');
+        await bot.sendMessage(adminId, '⚠️ Forwarding is not active.');
       }
     });
 
-    // Handle message when waiting for the groupId input
     bot.on('message', async (msg) => {
-      const userId = msg.from.id;
+      if (awaitingGroupId && msg.from.id === adminId) {
+        const groupId = msg.text.trim();
 
-      // Handle the groupId input from admin after /startForwarding
-      if (awaitingGroupId && userId === adminId) {
-        forwardingGroupId = msg.text; // Get the entered groupId
-        awaitingGroupId = false;
-        isForwarding = true; // Start forwarding
+        try {
+          const group = await psql.groups.findOne({ where: { id: groupId } });
 
-        await bot.sendMessage(
-          adminId,
-          `Forwarding messages from group ${forwardingGroupId} to admin has started.`
-        );
+          if (group) {
+            forwardingGroupId = groupId;
+            awaitingGroupId = false;
+            isForwarding = true;
+
+            await bot.sendMessage(
+              adminId,
+              `✅ Forwarding messages from group ${forwardingGroupId} to admin has started.`
+            );
+          } else {
+            awaitingGroupId = false;
+            await bot.sendMessage(
+              adminId,
+              `❌ Error: Group ID ${groupId} not found in the database.`
+            );
+          }
+        } catch (error) {
+          console.error('Database error:', error);
+          awaitingGroupId = false;
+          await bot.sendMessage(
+            adminId,
+            '⚠️ Database error occurred while checking the group ID.'
+          );
+        }
       }
     });
 
     bot.on('message', async (message) => {
-      if (isForwarding && message.chat.id.toString() === forwardingGroupId) {
-        try {
-          console.log(isForwarding, message.chat.id, forwardingGroupId);
-          await bot.forwardMessage(
-            adminId,
-            forwardingGroupId,
-            message.message_id
-          );
-        } catch (error) {
-          console.error('Error forwarding message:', error);
+      if (!isForwarding || message.chat.id != forwardingGroupId) return;
+
+      try {
+        const { text, from, reply_to_message, date } = message;
+
+        // **Kim yozgani (username bo'lsa, qo‘shib yozamiz)**
+        let sender = from.first_name || 'Unknown';
+        if (from.last_name) sender += ` ${from.last_name}`;
+        if (from.username) sender += ` (@${from.username})`;
+
+        // **Reply qilingan foydalanuvchi**
+        let replyTo = '';
+        if (reply_to_message) {
+          const replyFrom = reply_to_message.from;
+          replyTo = `\n🔄 Reply to: ${replyFrom.first_name || 'Unknown'}`;
+          if (replyFrom.last_name) replyTo += ` ${replyFrom.last_name}`;
+          if (replyFrom.username) replyTo += ` (@${replyFrom.username})`;
         }
+
+        // **Xabar yuborilgan vaqt**
+        const messageDate = new Date(date * 1000).toLocaleString('uz-UZ', {
+          timeZone: 'Asia/Tashkent',
+        });
+
+        // **Final message**
+        const forwardText = `📩 *New Message in Group*\n👤 *From:* ${sender}${replyTo}\n🕒 *Time:* ${messageDate}\n\n📝 *Message:* ${
+          text || '[No text]'
+        } `;
+
+        await bot.sendMessage(adminId, forwardText, { parse_mode: 'Markdown' });
+      } catch (error) {
+        console.error('Error forwarding message:', error);
       }
     });
-  }
 
-  static async showAllMembersHandler(message, bot) {
-    const userId = message.from.id;
-    let awaitingChatId = true;
-
-    if (userId != '175604385') {
-      await bot.sendMessage(chatId, 'Only the bot admin can use this command.');
-      return;
-    }
-
-    bot.on('message', async (msg) => {
-      const userId = msg.from.id;
-
-      if (awaitingChatId && userId == '175604385') {
-        const chatId = msg.text;
-        awaitingChatId = false;
-
-        try {
-          const memberCount = await bot.getChatMemberCount(chatId);
-
-          if (memberCount > 100) {
-            await bot.sendMessage(
-              userId,
-              'This command can only be used in groups with less than 100 members.'
-            );
-            return;
-          }
-
-          const membersList = [];
-
-          for (let i = 0; i < memberCount; i++) {
-            try {
-              const member = await bot.getChatMember(chatId, i);
-              const username =
-                member.user.username || member.user.first_name || 'Unknown';
-              membersList.push(username);
-            } catch (error) {
-              console.error(
-                `Failed to get member with index ${i}:`,
-                error.message
-              );
-            }
-          }
-
-          if (membersList.length === 0) {
-            await bot.sendMessage(userId, 'No members found in this group.');
-            return;
-          }
-
-          await bot.sendMessage(
-            userId,
-            `Group members (${
-              membersList.length
-            } members):\n\n${membersList.join('\n')}`
-          );
-        } catch (error) {
-          console.error('Error fetching group members:', error);
-          await bot.sendMessage(
-            userId,
-            'An error occurred while fetching group members. Make sure the chatId is correct.'
-          );
-        }
-      }
-    });
+    // **Faoliyatni boshlash**
+    awaitingGroupId = true;
+    await bot.sendMessage(
+      adminId,
+      '📥 Please enter the groupId of the group you want to forward messages from:'
+    );
   }
 };

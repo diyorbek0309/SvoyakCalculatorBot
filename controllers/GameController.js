@@ -71,9 +71,9 @@ module.exports = async function GameController(
     }
   } catch (error) {
     console.log(error);
-    // await bot.sendMessage(
-    //   id,
-    //   `Qandaydir xatolik sodir boʻldi. Iltimos, oʻyinni qayta boshlang!`
-    // );
+    await bot.sendMessage(
+      process.env.ADMIN,
+      `Qandaydir xatolik sodir boʻldi: ${error}`
+    );
   }
 };

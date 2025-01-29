@@ -21,7 +21,10 @@ module.exports = class ExtraControllers {
       }
     } catch (error) {
       console.log(error);
-      // await bot.sendMessage(chat_id, `Qandaydir xatolik sodir boʻldi!`);
+      await bot.sendMessage(
+        process.env.ADMIN,
+        `Qandaydir xatolik sodir boʻldi: ${error}`
+      );
     }
   }
 
@@ -95,8 +98,8 @@ module.exports = class ExtraControllers {
     } catch (error) {
       console.log(error);
       await bot.sendMessage(
-        group_id,
-        `Qandaydir xatolik sodir boʻldi. Iltimos, oʻyinni qayta boshlang!`
+        process.env.ADMIN,
+        `Qandaydir xatolik sodir boʻldi: ${error}`
       );
     }
   }
@@ -142,8 +145,8 @@ module.exports = class ExtraControllers {
     } catch (error) {
       console.log(error);
       await bot.sendMessage(
-        group_id,
-        `Qandaydir xatolik sodir boʻldi. Iltimos, oʻyinni qayta boshlang!`
+        process.env.ADMIN,
+        `Qandaydir xatolik sodir boʻldi: ${error}`
       );
     }
   }
@@ -165,8 +168,8 @@ module.exports = class ExtraControllers {
       await bot.sendMessage(group_id, `Done ✅`);
     } catch (error) {
       await bot.sendMessage(
-        group_id,
-        `Qandaydir xatolik sodir boʻldi. Iltimos, oʻyinni qayta boshlang!`
+        process.env.ADMIN,
+        `Qandaydir xatolik sodir boʻldi: ${error}`
       );
     }
   }

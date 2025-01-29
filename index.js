@@ -11,10 +11,6 @@ const bot = new TelegramBot(TOKEN, { polling: true });
 async function main() {
   const psql = await postgres();
 
-  // bot.onText(/\/forwardMessages/, () => {
-  //   GroupController.forwardMessagesToAdmin(bot);
-  // });
-
   bot.onText(/^\/start$/, (message) => {
     bot.sendMessage(
       message.chat.id,
@@ -90,9 +86,9 @@ async function main() {
     GroupController.removeGroup(message, bot, psql);
   });
 
-  // bot.onText(/\/showAllMembers/, async (message) => {
-  //   GroupController.showAllMembersHandler(message, bot);
-  // });
+  bot.onText(/\/startForwarding/, () => {
+    GroupController.forwardMessagesToAdmin(bot, psql);
+  });
 }
 
 main();

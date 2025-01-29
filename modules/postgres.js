@@ -1,9 +1,10 @@
-const { Sequelize } = require("sequelize");
-const { POSTGRES } = require("../config");
-const Models = require("./models");
+const { Sequelize } = require('sequelize');
+const { POSTGRES } = require('../config');
+const Models = require('./models');
 
 const sequelize = new Sequelize(POSTGRES, {
   logging: false,
+  schema: 'public',
 });
 
 async function postgres() {
@@ -17,11 +18,11 @@ async function postgres() {
 
     await sequelize.sync({ force: false });
 
-    console.log("Connected to DB");
+    console.log('Connected to DB');
 
     return db;
   } catch (error) {
-    console.error("Unable to connect to the database: ", error);
+    console.error('Unable to connect to the database: ', error);
   }
 }
 

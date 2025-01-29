@@ -1,7 +1,7 @@
-require("dotenv").config();
+require('dotenv').config();
 const { env } = process;
 
 module.exports = {
-    TOKEN: env.TOKEN,
-    POSTGRES: env.POSTGRES
-}
+  TOKEN: env.TOKEN,
+  POSTGRES: env.POSTGRES,
+};
