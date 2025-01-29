@@ -1,4 +1,4 @@
-const finishedResults = require("../services/finishedResults");
+const finishedResults = require('../services/finishedResults');
 
 module.exports = async function GameController(
   group,
@@ -13,14 +13,14 @@ module.exports = async function GameController(
     const game = await psql.games.findOne({
       where: {
         group_id: id,
-        status: "started",
+        status: 'started',
       },
     });
 
     const admins = await bot.getChatAdministrators(id);
     const adminIds = admins.map((admin) => admin.user.id);
 
-    if (type === "start") {
+    if (type === 'start') {
       if (!game) {
         await psql.games.create({
           group_id: id,
@@ -28,7 +28,7 @@ module.exports = async function GameController(
           creator_user_name: creator.username
             ? `@${creator.username}`
             : creator.first_name,
-          status: "started",
+          status: 'started',
         });
 
         await bot.sendMessage(id, `SvoyakCalculatorBot oʻz ishini boshladi!`);
@@ -38,7 +38,7 @@ module.exports = async function GameController(
           `Guruhda oʻyin boʻlayapti, yangisini boshlash uchun hozirgi oʻyinni tugatishingiz kerak!`
         );
       }
-    } else if (type === "end" && game) {
+    } else if (type === 'end' && game) {
       if (
         +game.creator_id === creator.id ||
         adminIds.includes(creator.id) ||
@@ -49,7 +49,7 @@ module.exports = async function GameController(
             game_id: game.id,
           },
         });
-        game.status = "finished";
+        game.status = 'finished';
         await game.save();
 
         if (allGamers.length) {
@@ -71,9 +71,9 @@ module.exports = async function GameController(
     }
   } catch (error) {
     console.log(error);
-    await bot.sendMessage(
-      id,
-      `Qandaydir xatolik sodir boʻldi. Iltimos, oʻyinni qayta boshlang!`
-    );
+    // await bot.sendMessage(
+    //   id,
+    //   `Qandaydir xatolik sodir boʻldi. Iltimos, oʻyinni qayta boshlang!`
+    // );
   }
 };

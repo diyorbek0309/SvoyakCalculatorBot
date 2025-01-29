@@ -252,12 +252,17 @@ module.exports = class GroupController {
           `Forwarding messages from group ${forwardingGroupId} to admin has started.`
         );
       }
+    });
 
-      // Forward messages if forwarding is active and the message is from the specified group
-      if (isForwarding && msg.chat.id.toString() === forwardingGroupId) {
+    bot.on('message', async (message) => {
+      if (isForwarding && message.chat.id.toString() === forwardingGroupId) {
         try {
-          // Forward the message to the admin
-          await bot.forwardMessage(adminId, forwardingGroupId, msg.message_id);
+          console.log(isForwarding, message.chat.id, forwardingGroupId);
+          await bot.forwardMessage(
+            adminId,
+            forwardingGroupId,
+            message.message_id
+          );
         } catch (error) {
           console.error('Error forwarding message:', error);
         }

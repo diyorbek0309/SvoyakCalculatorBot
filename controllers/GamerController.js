@@ -1,4 +1,4 @@
-const sendResults = require("../services/sendResults");
+const sendResults = require('../services/sendResults');
 
 module.exports = async function GamerController(message, bot, psql) {
   const {
@@ -14,7 +14,7 @@ module.exports = async function GamerController(message, bot, psql) {
   const game = await psql.games.findOne({
     where: {
       group_id,
-      status: "started",
+      status: 'started',
     },
   });
 
@@ -78,9 +78,9 @@ module.exports = async function GamerController(message, bot, psql) {
     }
   } catch (error) {
     console.log(error);
-    await bot.sendMessage(
-      group_id,
-      `Qandaydir xatolik sodir boʻldi. Iltimos, oʻyinni qayta boshlang!`
-    );
+    // await bot.sendMessage(
+    //   group_id,
+    //   `Qandaydir xatolik sodir boʻldi. Iltimos, oʻyinni qayta boshlang!`
+    // );
   }
 };
