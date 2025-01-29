@@ -21,7 +21,7 @@ module.exports = class ExtraControllers {
       }
     } catch (error) {
       console.log(error);
-      await bot.sendMessage(chat_id, `Qandaydir xatolik sodir boʻldi!`);
+      // await bot.sendMessage(chat_id, `Qandaydir xatolik sodir boʻldi!`);
     }
   }
 
