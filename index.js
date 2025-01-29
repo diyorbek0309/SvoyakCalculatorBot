@@ -86,8 +86,10 @@ async function main() {
     GroupController.removeGroup(message, bot, psql);
   });
 
-  bot.onText(/\/startForwarding/, () => {
-    GroupController.forwardMessagesToAdmin(bot, psql);
+  bot.onText(/\/startForwarding/, (msg) => {
+    if (msg.from.id === parseInt(process.env.ADMIN)) {
+      GroupController.forwardMessagesToAdmin(bot, psql);
+    }
   });
 }
 

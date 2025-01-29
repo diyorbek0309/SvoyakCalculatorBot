@@ -193,13 +193,13 @@ module.exports = class GroupController {
   static async forwardMessagesToAdmin(bot, psql) {
     let isForwarding = false;
     let forwardingGroupId = null;
-    let awaitingGroupId = true;
-    const adminId = 175604385;
+    let awaitingGroupId = false;
+    const adminId = process.env.ADMIN;
 
     bot.removeAllListeners('message');
 
     bot.onText(/\/stopForwarding/, async (msg) => {
-      if (isForwarding && msg.from.id === adminId) {
+      if (isForwarding && msg.from.id === parseInt(adminId)) {
         isForwarding = false;
         forwardingGroupId = null;
         await bot.sendMessage(adminId, '🚫 Forwarding has been stopped.');
@@ -209,7 +209,7 @@ module.exports = class GroupController {
     });
 
     bot.on('message', async (msg) => {
-      if (awaitingGroupId && msg.from.id === adminId) {
+      if (awaitingGroupId && msg.from.id === parseInt(adminId)) {
         const groupId = msg.text.trim();
 
         try {
@@ -222,7 +222,9 @@ module.exports = class GroupController {
 
             await bot.sendMessage(
               adminId,
-              `✅ Forwarding messages from group ${forwardingGroupId} to admin has started.`
+              `✅ Forwarding messages from group ${
+                group?.title || forwardingGroupId
+              } to admin has started.`
             );
           } else {
             awaitingGroupId = false;
@@ -248,12 +250,10 @@ module.exports = class GroupController {
       try {
         const { text, from, reply_to_message, date } = message;
 
-        // **Kim yozgani (username bo'lsa, qo‘shib yozamiz)**
         let sender = from.first_name || 'Unknown';
         if (from.last_name) sender += ` ${from.last_name}`;
         if (from.username) sender += ` (@${from.username})`;
 
-        // **Reply qilingan foydalanuvchi**
         let replyTo = '';
         if (reply_to_message) {
           const replyFrom = reply_to_message.from;
@@ -262,12 +262,10 @@ module.exports = class GroupController {
           if (replyFrom.username) replyTo += ` (@${replyFrom.username})`;
         }
 
-        // **Xabar yuborilgan vaqt**
         const messageDate = new Date(date * 1000).toLocaleString('uz-UZ', {
           timeZone: 'Asia/Tashkent',
         });
 
-        // **Final message**
         const forwardText = `📩 *New Message in Group*\n👤 *From:* ${sender}${replyTo}\n🕒 *Time:* ${messageDate}\n\n📝 *Message:* ${
           text || '[No text]'
         } `;
@@ -278,7 +276,6 @@ module.exports = class GroupController {
       }
     });
 
-    // **Faoliyatni boshlash**
     awaitingGroupId = true;
     await bot.sendMessage(
       adminId,
