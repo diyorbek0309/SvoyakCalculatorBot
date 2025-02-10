@@ -70,12 +70,10 @@ async function main() {
 
   bot.on('message', async (message) => {
     if (message.chat.type === 'supergroup' || message.chat.type === 'group') {
-      await GroupController.saveGroup(message, bot, psql, true);
-
       if (message.new_chat_members) {
-        message.new_chat_members.forEach((member) => {
+        message.new_chat_members.forEach(async (member) => {
           if (member.id == 5536335495) {
-            GroupController.saveGroup(message, bot, psql);
+            await GroupController.saveGroup(message, bot, psql);
           }
         });
       }
