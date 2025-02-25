@@ -68,27 +68,28 @@ async function main() {
     );
   });
 
-  bot.on('message', async (message) => {
-    if (message.chat.type === 'supergroup' || message.chat.type === 'group') {
-      if (message.new_chat_members) {
-        message.new_chat_members.forEach(async (member) => {
-          if (member.id == 5536335495) {
-            await GroupController.saveGroup(message, bot, psql);
-          }
-        });
-      }
-    }
-  });
-
-  bot.on('my_chat_member', async (message) => {
+  bot.on('my_chat_member', (message) => {
     GroupController.removeGroup(message, bot, psql);
   });
 
-  bot.onText(/\/startForwarding/, (msg) => {
-    if (msg.from.id === parseInt(process.env.ADMIN)) {
-      GroupController.forwardMessagesToAdmin(bot, psql);
-    }
-  });
+  // bot.on('message', async (message) => {
+  //   if (message.chat.type === 'supergroup' || message.chat.type === 'group') {
+  //     if (message.new_chat_members) {
+  //       message.new_chat_members.forEach(async (member) => {
+  //         if (member.id == 5536335495) {
+  //           await GroupController.saveGroup(message, bot, psql);
+  //         }
+  //       });
+  //     }
+  //   }
+  // });
+
+
+  // bot.onText(/\/startForwarding/, (msg) => {
+  //   if (msg.from.id === parseInt(process.env.ADMIN)) {
+  //     GroupController.forwardMessagesToAdmin(bot, psql);
+  //   }
+  // });
 }
 
 main();
