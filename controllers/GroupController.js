@@ -48,7 +48,7 @@ module.exports = class GroupController {
             id,
             `Assalomu aleykum! ${
               username ? '@' + username : first_name
-            } SvoyakCalculatorBotni guruhingizga qayta qoʻshganingiz uchun raxmat!`
+            } SvoyakCalculatorBotni guruhingizga qayta qoʻshganingiz uchun raxmat!\nBot imkoniyatlaridan toʻliq foydalanish uchun guruhda admin qiling!`
           );
           await bot.sendMessage(
             '175604385',
