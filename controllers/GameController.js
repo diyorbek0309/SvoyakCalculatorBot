@@ -18,7 +18,7 @@ module.exports = async function GameController(
     });
 
     const admins = await bot.getChatAdministrators(id);
-    const adminIds = admins.map((admin) => admin.user.id);
+    const adminIds = admins.length ? admins.map((admin) => admin.user.id) : [];
 
     if (type === 'start') {
       if (!game) {
@@ -53,7 +53,7 @@ module.exports = async function GameController(
         await game.save();
 
         if (allGamers.length) {
-          finishedResults(bot, game, allGamers);
+          await finishedResults(bot, game, allGamers);
           await bot.sendMessage(
             id,
             `Boshlovchi ${game.creator_user_name}'ga alohida tashakkur aytamiz!\n\nDasturchi: @dasturchining_tundaligi\nBot faoliyati davomiy va bepul boʻlishi uchun qoʻllab-quvvatlang: https://tirikchilik.uz/zakadabiyot\n8600490457282572`

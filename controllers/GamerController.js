@@ -44,7 +44,7 @@ module.exports = async function GamerController(message, bot, psql) {
           });
           allGamers.sort((a, b) => b.score - a.score);
           if (allGamers.length > 0) {
-            sendResults(bot, game, allGamers);
+            await sendResults(bot, game, allGamers);
           }
         } else {
           gamer.score = parseInt(gamer.score) + parseInt(message.text);
@@ -55,7 +55,7 @@ module.exports = async function GamerController(message, bot, psql) {
             },
           });
           allGamers.sort((a, b) => b.score - a.score);
-          sendResults(bot, game, allGamers);
+          await sendResults(bot, game, allGamers);
         }
       }
     }

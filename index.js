@@ -72,24 +72,17 @@ async function main() {
     GroupController.removeGroup(message, bot, psql);
   });
 
-  // bot.on('message', async (message) => {
-  //   if (message.chat.type === 'supergroup' || message.chat.type === 'group') {
-  //     if (message.new_chat_members) {
-  //       message.new_chat_members.forEach(async (member) => {
-  //         if (member.id == 5536335495) {
-  //           await GroupController.saveGroup(message, bot, psql);
-  //         }
-  //       });
-  //     }
-  //   }
-  // });
-
-
-  // bot.onText(/\/startForwarding/, (msg) => {
-  //   if (msg.from.id === parseInt(process.env.ADMIN)) {
-  //     GroupController.forwardMessagesToAdmin(bot, psql);
-  //   }
-  // });
+  bot.on('message', async (message) => {
+    if (message.chat.type === 'supergroup' || message.chat.type === 'group') {
+      if (message.new_chat_members) {
+        for (const member of message.new_chat_members) {
+          if (member.id == 5536335495) {
+            await GroupController.saveGroup(message, bot, psql);
+          }
+        }
+      }
+    }
+  });
 }
 
 main();
